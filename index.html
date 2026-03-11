@@ -5,47 +5,107 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TRIGO — System Architecture Diagrams</title>
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap');
 :root{
   --teal:#00C9A7;--teal2:#00876f;--teal-g:rgba(0,201,167,.14);--teal-g2:rgba(0,201,167,.06);
   --bg:#070b0a;--s1:#0e1512;--s2:#141c19;--s3:#1a2420;
-  --border:rgba(0,201,167,.13);--text:#ddeae6;--dim:#5a7870;
+  --border:rgba(0,201,167,.13);--border2:rgba(0,201,167,.22);
+  --text:#ddeae6;--dim:#5a7870;--dim2:#3a5048;--text-dim:#5a7870;
 }
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden}
-header{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;background:var(--s1);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:500;backdrop-filter:blur(12px)}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;
+  background:var(--s1);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:500;backdrop-filter:blur(12px)}
 .logo{font-size:22px;font-weight:800;color:var(--teal);letter-spacing:3px}
 .logo-sub{font-size:9px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px;font-family:'JetBrains Mono',monospace}
-.badge{background:var(--teal-g);border:1px solid var(--teal);color:var(--teal);font-size:9px;font-family:'JetBrains Mono',monospace;padding:4px 12px;border-radius:20px;letter-spacing:1.5px}
-.top-nav{display:flex;background:var(--s2);border-bottom:2px solid var(--border)}
-.nav-btn{flex:1;padding:15px 20px;background:transparent;border:none;color:var(--dim);font-size:12px;font-family:'Syne',sans-serif;font-weight:600;cursor:pointer;transition:all .22s;border-bottom:3px solid transparent;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:-2px;letter-spacing:.5px;text-transform:uppercase}
+.badge{background:var(--teal-g);border:1px solid var(--teal);color:var(--teal);font-size:9px;
+  font-family:'JetBrains Mono',monospace;padding:4px 12px;border-radius:20px;letter-spacing:1.5px}
+.top-nav{display:flex;background:var(--s2);border-bottom:2px solid var(--border);overflow-x:auto}
+.nav-btn{flex:1;min-width:150px;padding:13px 12px;background:transparent;border:none;
+  color:var(--dim);font-size:11px;font-family:'Syne',sans-serif;font-weight:600;cursor:pointer;
+  transition:all .22s;border-bottom:3px solid transparent;display:flex;align-items:center;
+  justify-content:center;gap:8px;margin-bottom:-2px;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap}
 .nav-btn:hover{color:var(--teal);background:var(--teal-g2)}
 .nav-btn.active{color:var(--teal);border-bottom-color:var(--teal);background:rgba(0,201,167,.05)}
-.nav-icon{font-size:18px}
+.nav-icon{font-size:16px}
 .panel{display:none}.panel.active{display:block}
-.diagram-scroll{overflow:auto;padding:32px 36px;min-height:calc(100vh - 120px)}
-svg text{font-family:'JetBrains Mono',monospace}
+.diagram-panel{display:none}.diagram-panel.active{display:block}
 .legend{display:flex;gap:16px;flex-wrap:wrap;padding:10px 36px;background:var(--s3);border-bottom:1px solid var(--border);align-items:center}
 .leg-title{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1.5px;font-family:'JetBrains Mono',monospace;margin-right:6px}
 .leg-item{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace}
 .leg-sq{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.diagram-scroll{overflow:auto;padding:28px 32px;min-height:calc(100vh - 160px)}
+svg text{font-family:'JetBrains Mono',monospace}
+.tt{position:fixed;background:var(--s1);border:1px solid var(--teal);border-radius:8px;
+  padding:10px 14px;max-width:280px;font-size:10.5px;line-height:1.6;z-index:9999;
+  pointer-events:none;opacity:0;transition:opacity .12s;box-shadow:0 8px 28px rgba(0,0,0,.7);font-family:'JetBrains Mono',monospace}
+.tt.show{opacity:1}
+.tt-title{font-weight:700;color:var(--teal);margin-bottom:4px;font-size:11px}
 .seq-tabs{display:flex;gap:4px;padding:12px 36px;background:var(--s2);border-bottom:1px solid var(--border);overflow-x:auto;white-space:nowrap}
-.seq-tab{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dim);font-size:10px;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;letter-spacing:.5px}
+.seq-tab{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;
+  color:var(--dim);font-size:10px;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;letter-spacing:.5px}
 .seq-tab:hover{border-color:var(--teal);color:var(--teal)}
 .seq-tab.active{background:var(--teal);color:var(--bg);border-color:var(--teal);font-weight:700}
 .seq-flow{display:none}.seq-flow.active{display:block}
-.tt{position:fixed;background:var(--s1);border:1px solid var(--teal);border-radius:8px;padding:10px 14px;max-width:260px;font-size:10.5px;line-height:1.6;z-index:9999;pointer-events:none;opacity:0;transition:opacity .12s;box-shadow:0 8px 28px rgba(0,0,0,.7);font-family:'JetBrains Mono',monospace}
-.tt.show{opacity:1}
-.tt-title{font-weight:700;color:var(--teal);margin-bottom:4px;font-size:11px}
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:var(--s1)}
-::-webkit-scrollbar-thumb{background:#00876f;border-radius:2px}
+.seq-deliv-sub{display:none}.seq-deliv-sub.active{display:block}
+.subtitle{font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.uc-actor-row{display:flex;gap:10px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--s2)}
+.uc-actor{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 14px;border-radius:8px;
+  border:1px solid var(--border);cursor:pointer;transition:all .18s;font-size:9px;
+  font-family:'JetBrains Mono',monospace;color:var(--dim);min-width:80px;text-align:center}
+.uc-actor:hover,.uc-actor.active{border-color:var(--teal);color:var(--teal);background:var(--teal-g2)}
+.uc-actor .icon{font-size:22px}
+.uc-section{padding:8px 20px 4px;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim);font-family:'JetBrains Mono',monospace;border-bottom:1px solid var(--border2)}
+.uc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;padding:20px}
+.uc-node{padding:10px 14px;border-radius:8px;border:1px solid var(--border);font-size:10.5px;
+  cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:8px;
+  font-family:'JetBrains Mono',monospace;line-height:1.4;color:var(--text)}
+.uc-node:hover{border-color:var(--teal);background:rgba(0,201,167,.07);transform:translateY(-1px)}
+.uc-node.selected{border-color:var(--teal);background:rgba(0,201,167,.12);color:var(--teal)}
+.uc-node.dimmed{opacity:.3;pointer-events:none}
+.uc-tag{font-size:8px;font-family:'JetBrains Mono',monospace;background:var(--teal-g);color:var(--teal);
+  padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0;border:1px solid var(--border2)}
+.uc-detail-panel{background:var(--s1);border-top:2px solid var(--teal);padding:16px 24px;min-height:90px;
+  display:flex;gap:20px;align-items:flex-start}
+.uc-detail-title{font-size:14px;font-weight:700;color:var(--teal);margin-bottom:6px;font-family:'Syne',sans-serif}
+.uc-detail-body{font-size:11px;color:var(--text);line-height:1.7;font-family:'JetBrains Mono',monospace;max-width:900px}
+.uc-detail-empty{color:var(--dim);font-size:11px;font-family:'JetBrains Mono',monospace;align-self:center}
+.uc-detail-tag{font-size:9px;background:var(--teal-g);color:var(--teal);padding:2px 8px;border-radius:12px;
+  border:1px solid var(--border2);font-family:'JetBrains Mono',monospace;margin-bottom:8px;display:inline-block}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--s3)}
+.filter-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;
+  color:var(--dim);font-size:9.5px;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:all .16s;letter-spacing:.5px}
+.filter-btn:hover{border-color:var(--teal);color:var(--teal)}
+.filter-btn.active{background:var(--teal);color:var(--bg);border-color:var(--teal);font-weight:700}
+.afd-tabs{display:flex;gap:6px;padding:12px 20px;background:var(--s2);border-bottom:1px solid var(--border);overflow-x:auto;white-space:nowrap}
+.afd-tab{padding:6px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;
+  color:var(--dim);font-size:10px;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0}
+.afd-tab:hover{border-color:var(--teal);color:var(--teal)}
+.afd-tab.active{background:var(--teal);color:#061110;border-color:var(--teal);font-weight:600}
+.afd-flow{display:none;padding:24px 20px}.afd-flow.active{display:block}
+.afd-svg-wrap{overflow-x:auto;overflow-y:visible}
+.afd-deliv-sub{display:none}.afd-deliv-sub.active{display:block}
+
+/* ── Unified Tooltip ── */
+.tooltip{position:fixed;background:var(--s1);border:1px solid var(--teal);border-radius:10px;
+  padding:12px 16px;max-width:300px;font-size:10.5px;line-height:1.65;z-index:9999;
+  pointer-events:none;opacity:0;transition:opacity .12s;box-shadow:0 8px 28px rgba(0,0,0,.75);
+  font-family:'JetBrains Mono',monospace}
+.tooltip.show{opacity:1}
+.tt-title{font-weight:700;color:var(--teal);margin-bottom:3px;font-size:11.5px}
+.tt-role{font-size:8.5px;letter-spacing:1.5px;color:var(--dim);margin-bottom:6px;text-transform:uppercase}
+.tt-body{color:var(--text);font-size:10px;line-height:1.6}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:var(--s1)}::-webkit-scrollbar-thumb{background:#00876f;border-radius:2px}
+
+.seq-deliv-sub{display:none}.seq-deliv-sub.active{display:block}
 </style>
 </head>
 <body>
 <div class="tt" id="tooltip"><div class="tt-title" id="tt-title"></div><div id="tt-body"></div></div>
 <header>
-  <div><div class="logo">TRiGO</div><div class="logo-sub">System Architecture Diagrams — v3.0</div></div>
+  <div><div class="logo">TRiGO</div><div class="logo-sub">System Architecture Diagrams — v3.1</div></div>
   <div class="badge">DFD · CLASS · SEQUENCE</div>
 </header>
 <div class="top-nav">
@@ -53,9 +113,6 @@ svg text{font-family:'JetBrains Mono',monospace}
   <button class="nav-btn" onclick="switchPanel('class',this)"><span class="nav-icon">🏗</span>Class Diagram</button>
   <button class="nav-btn" onclick="switchPanel('seq',this)"><span class="nav-icon">⏱</span>Sequence Diagram</button>
 </div>
-<!-- ══════════════════════════════════════════════════════════════
-     PANEL 1 — DATA FLOW DIAGRAM
-══════════════════════════════════════════════════════════════ -->
 <div class="panel active" id="panel-dfd">
 <div class="legend">
   <span class="leg-title">Legend:</span>
@@ -403,9 +460,6 @@ svg text{font-family:'JetBrains Mono',monospace}
 </svg>
 </div>
 </div>
-<!-- ══════════════════════════════════════════════════════════════
-     PANEL 2 — CLASS DIAGRAM
-══════════════════════════════════════════════════════════════ -->
 <div class="panel" id="panel-class">
 <div class="legend">
   <span class="leg-title">Notation:</span>
@@ -911,20 +965,44 @@ svg text{font-family:'JetBrains Mono',monospace}
 <text x="1200" y="550" text-anchor="middle" font-size="7.5" fill="#2a6848">used by Trip, Delivery, BusStation</text>
 </svg>
 </div>
-</div>
-<!-- ══════════════════════════════════════════════════════════════
-     PANEL 3 — SEQUENCE DIAGRAM
-══════════════════════════════════════════════════════════════ -->
 <div class="panel" id="panel-seq">
 <div class="seq-tabs">
   <button class="seq-tab active" onclick="showSeq('s1',this)">① Shared Ride Booking</button>
   <button class="seq-tab" onclick="showSeq('s2',this)">② Private Ride (Safety→Online)</button>
-  <button class="seq-tab" onclick="showSeq('s3',this)">③ Parcel Delivery</button>
+  <button class="seq-tab" onclick="showSeq('s3',this)">③ Parcel Delivery (3 flows)</button>
   <button class="seq-tab" onclick="showSeq('s4',this)">④ Capacity &amp; Waitlist</button>
   <button class="seq-tab" onclick="showSeq('s5',this)">⑤ Rewards &amp; Wallet</button>
   <button class="seq-tab" onclick="showSeq('s6',this)">⑥ Doc Verification</button>
   <button class="seq-tab" onclick="showSeq('s7',this)">⑦ Bus Operations</button>
 </div>
+  <!-- S3d: LARGE PACKAGE — LONG DISTANCE (QUOTE-BASED) -->
+  <div class="seq-deliv-sub" id="seqd-s3d" style="display:none">
+    <div class="seq-header">③d Large Package — Long Distance · Quote-Based Pricing</div>
+    <div class="seq-container">
+      <div class="seq-actors">
+        <div class="seq-actor">👤 Client</div>
+        <div class="seq-actor">📱 App</div>
+        <div class="seq-actor">⚙ System</div>
+        <div class="seq-actor">🚛 Driver(s)</div>
+      </div>
+      <div class="seq-messages">
+        <div class="seq-msg"><span class="seq-from actor-0">Client</span><span class="seq-arrow">→</span><span class="seq-to actor-1">App</span><span class="seq-label">placeLargePackageJob(category, items, origin, dest, schedule)</span></div>
+        <div class="seq-msg"><span class="seq-from actor-1">App</span><span class="seq-arrow">→</span><span class="seq-to actor-2">System</span><span class="seq-label">createJobRequest() → INSERT Delivery(status=PENDING, price=NULL, type=LARGE_LONG)</span></div>
+        <div class="seq-msg"><span class="seq-from actor-2">System</span><span class="seq-arrow">→</span><span class="seq-to actor-3">Driver(s)</span><span class="seq-label">broadcastJobToDrivers(vehicleType, originRegion) — PUSH notification to all eligible</span></div>
+        <div class="seq-msg"><span class="seq-from actor-3">Driver(s)</span><span class="seq-arrow">→</span><span class="seq-to actor-2">System</span><span class="seq-label">submitQuote(driverId, price, conditions, vehicleDetails) → INSERT DriverQuote</span></div>
+        <div class="seq-msg"><span class="seq-from actor-2">System</span><span class="seq-arrow">→</span><span class="seq-to actor-1">App</span><span class="seq-label">notifyClientNewQuote(quoteList) — PUSH: "New quote received"</span></div>
+        <div class="seq-msg"><span class="seq-from actor-1">App</span><span class="seq-arrow">→</span><span class="seq-to actor-0">Client</span><span class="seq-label">displayQuotes(driverProfile, vehicle, rating, price)</span></div>
+        <div class="seq-msg"><span class="seq-from actor-0">Client</span><span class="seq-arrow">→</span><span class="seq-to actor-1">App</span><span class="seq-label">selectQuote(quoteId) — Client picks preferred driver</span></div>
+        <div class="seq-msg"><span class="seq-from actor-1">App</span><span class="seq-arrow">→</span><span class="seq-to actor-2">System</span><span class="seq-label">confirmQuote() → UPDATE Delivery(status=ASSIGNED, driverId, price=quoted) · cancel remaining quotes</span></div>
+        <div class="seq-msg"><span class="seq-from actor-2">System</span><span class="seq-arrow">→</span><span class="seq-to actor-3">Driver</span><span class="seq-label">notifyAssigned() — PUSH: "Job confirmed, proceed to origin"</span></div>
+        <div class="seq-msg"><span class="seq-from actor-3">Driver</span><span class="seq-arrow">→</span><span class="seq-to actor-2">System</span><span class="seq-label">confirmLoad(checklist) → DeliveryEvent: PICKUP_CONFIRMED · status=IN_TRANSIT</span></div>
+        <div class="seq-msg"><span class="seq-from actor-2">System</span><span class="seq-arrow">→</span><span class="seq-to actor-1">App</span><span class="seq-label">streamGPS(lat, lng, eta) — live location loop during long-distance transit</span></div>
+        <div class="seq-msg"><span class="seq-from actor-3">Driver</span><span class="seq-arrow">→</span><span class="seq-to actor-2">System</span><span class="seq-label">unloadAndProof(photoUrl) → DeliveryEvent: DELIVERED · status=DELIVERED</span></div>
+        <div class="seq-msg"><span class="seq-from actor-0">Client</span><span class="seq-arrow">→</span><span class="seq-to actor-2">System</span><span class="seq-label">confirmReceipt() → paymentStatus=PAID (quoted amount released)</span></div>
+        <div class="seq-msg"><span class="seq-from actor-2">System</span><span class="seq-arrow">→</span><span class="seq-to actor-0">Client</span><span class="seq-label">PUSH: "Your delivery is complete. Payment processed."</span></div>
+      </div>
+    </div>
+  </div>
 <div class="diagram-scroll">
 
 <!-- ① SHARED RIDE -->
@@ -1156,104 +1234,6 @@ svg text{font-family:'JetBrains Mono',monospace}
 
 <line x1="238" y1="690" x2="425" y2="690" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
 <text x="331" y="685" text-anchor="middle" fill="#FF6B9D">23. UPDATE status=COMPLETED, isOnTrip=false, actualArrival</text>
-</g>
-</svg>
-
-<!-- ③ PARCEL DELIVERY -->
-<svg class="seq-flow" id="seq-s3" width="1350" height="840" viewBox="0 0 1350 840">
-<rect width="1350" height="840" fill="#0e1512" rx="12"/>
-<text x="675" y="28" text-anchor="middle" font-size="13" fill="#FFB347" font-weight="700" font-family="Syne,sans-serif">③ Parcel Delivery — Full Lifecycle</text>
-<g font-family="JetBrains Mono,monospace">
-  <rect x="30"  y="46" width="90"  height="28" rx="4" fill="rgba(0,201,167,.15)"   stroke="#00C9A7" stroke-width="1.2"/><text x="75"  y="65" text-anchor="middle" font-size="8.5" fill="#00C9A7" font-weight="700">CLIENT</text>
-  <rect x="185" y="46" width="100" height="28" rx="4" fill="rgba(74,158,255,.15)"  stroke="#4A9EFF" stroke-width="1.2"/><text x="235" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">SYSTEM/API</text>
-  <rect x="355" y="46" width="100" height="28" rx="4" fill="rgba(116,198,157,.15)" stroke="#74C69D" stroke-width="1.2"/><text x="405" y="65" text-anchor="middle" font-size="8.5" fill="#74C69D" font-weight="700">MAP LOCATOR</text>
-  <rect x="525" y="46" width="100" height="28" rx="4" fill="rgba(255,107,157,.15)" stroke="#FF6B9D" stroke-width="1.2"/><text x="575" y="65" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">DATABASE</text>
-  <rect x="695" y="46" width="90"  height="28" rx="4" fill="rgba(255,179,71,.15)"  stroke="#FFB347" stroke-width="1.2"/><text x="740" y="65" text-anchor="middle" font-size="8.5" fill="#FFB347" font-weight="700">AGENT</text>
-  <rect x="855" y="46" width="110" height="28" rx="4" fill="rgba(74,158,255,.1)"   stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="910" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">NOTIFICATIONS</text>
-</g>
-<line x1="75"  y1="74" x2="75"  y2="810" stroke="#00C9A7" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
-<line x1="235" y1="74" x2="235" y2="810" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
-<line x1="405" y1="74" x2="405" y2="810" stroke="#74C69D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
-<line x1="575" y1="74" x2="575" y2="810" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
-<line x1="740" y1="74" x2="740" y2="810" stroke="#FFB347" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
-<line x1="910" y1="74" x2="910" y2="810" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
-
-<g font-family="JetBrains Mono,monospace" font-size="8.5">
-<rect x="49" y="100" width="14" height="580" rx="2" fill="rgba(0,201,167,.12)"/>
-<rect x="209" y="114" width="14" height="580" rx="2" fill="rgba(74,158,255,.12)"/>
-
-<line x1="63" y1="114" x2="209" y2="114" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
-<text x="142" y="109" text-anchor="middle" fill="#00C9A7">1. placeDeliveryOrder(pickup, dropoff, parcelInfo)</text>
-
-<line x1="235" y1="136" x2="405" y2="136" stroke="#74C69D" stroke-width="1.5" marker-end="url(#se)"/>
-<text x="320" y="131" text-anchor="middle" fill="#74C69D">2. queryPOIs(address, APPROVED)</text>
-
-<line x1="405" y1="156" x2="249" y2="156" stroke="#74C69D" stroke-width="1" marker-end="url(#se)" stroke-dasharray="4,3"/>
-<text x="327" y="151" text-anchor="middle" fill="#74C69D" opacity=".7">3. [address suggestions]</text>
-
-<line x1="235" y1="178" x2="575" y2="178" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="405" y="173" text-anchor="middle" fill="#FF6B9D">4. INSERT Delivery(status=PENDING, agentId=NULL)</text>
-
-<line x1="235" y1="200" x2="575" y2="200" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="405" y="195" text-anchor="middle" fill="#FF6B9D">5. INSERT DeliveryEvent(CREATED, location)</text>
-
-<rect x="209" y="212" width="530" height="80" rx="4" fill="none" stroke="rgba(255,179,71,.2)" stroke-width="1" stroke-dasharray="5,3"/>
-<text x="219" y="226" font-size="7.5" fill="#6a4820">loop  [broadcast to available agents in city]</text>
-<line x1="235" y1="240" x2="910" y2="240" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
-<text x="572" y="235" text-anchor="middle" fill="#4A9EFF">6. PUSH: new delivery order → Agent</text>
-<rect x="714" y="252" width="54" height="20" rx="3" fill="rgba(255,179,71,.12)"/>
-<line x1="740" y1="262" x2="249" y2="262" stroke="#FFB347" stroke-width="1.5" marker-end="url(#sg)"/>
-<text x="494" y="257" text-anchor="middle" fill="#FFB347">7. respondToDelivery(deliveryId, accept|reject)</text>
-
-<!-- alt accept/reject -->
-<rect x="209" y="295" width="530" height="68" rx="4" fill="none" stroke="rgba(255,179,71,.18)" stroke-width="1" stroke-dasharray="5,3"/>
-<text x="219" y="309" font-size="7.5" fill="#6a4820">alt  [agent accepts]</text>
-<line x1="235" y1="321" x2="575" y2="321" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="405" y="316" text-anchor="middle" fill="#FF6B9D">8a. UPDATE agentId=agent, status=ASSIGNED</text>
-<text x="219" y="339" font-size="7.5" fill="#6a4820">else  [reject — re-broadcast to next agent]</text>
-<line x1="235" y1="351" x2="910" y2="351" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sb)" stroke-dasharray="3,3"/>
-<text x="572" y="346" text-anchor="middle" fill="#4A9EFF" opacity=".7">8b. PUSH next agent</text>
-
-<rect x="714" y="367" width="54" height="20" rx="3" fill="rgba(255,179,71,.12)"/>
-<line x1="740" y1="377" x2="249" y2="377" stroke="#FFB347" stroke-width="1.5" marker-end="url(#sg)"/>
-<text x="494" y="372" text-anchor="middle" fill="#FFB347">9. confirmPickup(deliveryId, currentLocation)</text>
-
-<line x1="235" y1="399" x2="575" y2="399" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="405" y="394" text-anchor="middle" fill="#FF6B9D">10. UPDATE status=PICKED_UP; stamp pickupTime</text>
-
-<line x1="235" y1="421" x2="575" y2="421" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="405" y="416" text-anchor="middle" fill="#FF6B9D">11. INSERT DeliveryEvent(PICKUP_CONFIRMED)</text>
-
-<line x1="235" y1="445" x2="910" y2="445" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
-<text x="572" y="440" text-anchor="middle" fill="#4A9EFF">12. PUSH: "package picked up" → Client</text>
-
-<line x1="740" y1="469" x2="249" y2="469" stroke="#FFB347" stroke-width="1.5" marker-end="url(#sg)"/>
-<text x="494" y="464" text-anchor="middle" fill="#FFB347">13. streamLocationUpdates(lat, lng) [periodic]</text>
-
-<line x1="235" y1="491" x2="575" y2="491" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="405" y="486" text-anchor="middle" fill="#FF6B9D">14. INSERT DeliveryEvent(IN_TRANSIT, coords)</text>
-
-<line x1="235" y1="513" x2="63" y2="513" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sa)" stroke-dasharray="4,3"/>
-<text x="149" y="508" text-anchor="middle" fill="#4A9EFF" opacity=".7">15. [live tracking stream → Client]</text>
-
-<rect x="714" y="525" width="54" height="20" rx="3" fill="rgba(255,179,71,.12)"/>
-<line x1="740" y1="535" x2="249" y2="535" stroke="#FFB347" stroke-width="1.5" marker-end="url(#sg)"/>
-<text x="494" y="530" text-anchor="middle" fill="#FFB347">16. confirmDelivery(photo, signature, recipientName)</text>
-
-<line x1="235" y1="557" x2="575" y2="557" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="405" y="552" text-anchor="middle" fill="#FF6B9D">17. INSERT DeliveryPhoto(PROOF) + INSERT DeliverySignature</text>
-
-<line x1="235" y1="579" x2="575" y2="579" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="405" y="574" text-anchor="middle" fill="#FF6B9D">18. UPDATE status=DELIVERED; actualDeliveryTime</text>
-
-<line x1="235" y1="601" x2="575" y2="601" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="405" y="596" text-anchor="middle" fill="#FF6B9D">19. UPDATE paymentStatus=PAID; INSERT DeliveryEvent(DELIVERED)</text>
-
-<line x1="235" y1="623" x2="910" y2="623" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
-<text x="572" y="618" text-anchor="middle" fill="#4A9EFF">20. PUSH: "delivery confirmed" → Client + Agent</text>
-
-<line x1="235" y1="647" x2="63" y2="647" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sa)" stroke-dasharray="4,3"/>
-<text x="149" y="642" text-anchor="middle" fill="#4A9EFF" opacity=".7">21. [delivery complete screen + receipt]</text>
 </g>
 </svg>
 
@@ -1575,21 +1555,349 @@ svg text{font-family:'JetBrains Mono',monospace}
 <line x1="240" y1="585" x2="410" y2="585" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
 <text x="325" y="580" text-anchor="middle" fill="#FF6B9D">20. INSERT BusDeliveryHandoff(fromStation, loadedBy)</text>
 
-<line x1="58" y1="607" x2="214" y2="607" stroke="#B48AE8" stroke-width="1.5" marker-end="url(#ce)"/>
-<text x="136" y="602" text-anchor="middle" fill="#B48AE8">21. confirmDelivery(deliveryId) — destination station</text>
+<l
+</body>
+</html<div class="seq-flow active" id="seq-s3">
+  <div style="display:flex;gap:6px;padding:10px 32px;background:var(--s2);border-bottom:1px solid var(--border)">
+    <button class="seq-tab active" onclick="showSeqDelivSub('s3a',this)" style="font-size:9px">📦 Small · Short (Instant)</button>
+    <button class="seq-tab" onclick="showSeqDelivSub('s3b',this)" style="font-size:9px">📦 Small · Long (Instant + Relay)</button>
+    <button class="seq-tab" onclick="showSeqDelivSub('s3c',this)" style="font-size:9px">🚛 Large · Short (Instant)</button>
+    <button class="seq-tab" onclick="showSeqDelivSub('s3d',this)" style="font-size:9px">🚛 Large · Long (Quote-Based)</button>
+  </div>
 
-<line x1="240" y1="629" x2="410" y2="629" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="325" y="624" text-anchor="middle" fill="#FF6B9D">22. UPDATE BusDelivery.status=DELIVERED</text>
+  <!-- S3a: SMALL PACKAGE DOOR-TO-DOOR -->
+  <div class="seq-deliv-sub active" id="seqd-s3a">
+  <svg width="1300" height="900" viewBox="0 0 1300 900">
+  <rect width="1300" height="900" fill="#0e1512" rx="12"/>
+  <text x="650" y="26" text-anchor="middle" font-size="12" fill="#FFB347" font-weight="700" font-family="Syne,sans-serif">③a Small Package — Door-to-Door (Short Distance)</text>
+  <g font-family="JetBrains Mono,monospace">
+  <!-- Lifelines -->
+  <rect x="20"  y="44" width="85"  height="26" rx="4" fill="rgba(0,201,167,.15)"  stroke="#00C9A7" stroke-width="1.2"/><text x="62"  y="62" text-anchor="middle" font-size="8" fill="#00C9A7"  font-weight="700">CLIENT</text>
+  <rect x="160" y="44" width="95"  height="26" rx="4" fill="rgba(74,158,255,.15)" stroke="#4A9EFF" stroke-width="1.2"/><text x="207" y="62" text-anchor="middle" font-size="8" fill="#4A9EFF"  font-weight="700">SYSTEM/API</text>
+  <rect x="315" y="44" width="90"  height="26" rx="4" fill="rgba(116,198,157,.15)"stroke="#74C69D" stroke-width="1.2"/><text x="360" y="62" text-anchor="middle" font-size="8" fill="#74C69D"  font-weight="700">MAP LOCATOR</text>
+  <rect x="465" y="44" width="80"  height="26" rx="4" fill="rgba(255,179,71,.15)" stroke="#FFB347" stroke-width="1.2"/><text x="505" y="62" text-anchor="middle" font-size="8" fill="#FFB347"  font-weight="700">AGENT</text>
+  <rect x="605" y="44" width="90"  height="26" rx="4" fill="rgba(255,107,157,.15)"stroke="#FF6B9D" stroke-width="1.2"/><text x="650" y="62" text-anchor="middle" font-size="8" fill="#FF6B9D"  font-weight="700">DATABASE</text>
+  <rect x="760" y="44" width="100" height="26" rx="4" fill="rgba(74,158,255,.1)"  stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="810" y="62" text-anchor="middle" font-size="8" fill="#4A9EFF"  font-weight="700">NOTIFICATIONS</text>
+  <!-- Lifeline dashes -->
+  <line x1="62"  y1="70" x2="62"  y2="890" stroke="#00C9A7" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="207" y1="70" x2="207" y2="890" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="360" y1="70" x2="360" y2="890" stroke="#74C69D" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="505" y1="70" x2="505" y2="890" stroke="#FFB347" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="650" y1="70" x2="650" y2="890" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="810" y1="70" x2="810" y2="890" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="3,4" opacity=".3"/>
+  <!-- Step labels helper -->
+  <!-- Step 1: enter addresses -->
+  <text x="30" y="100" font-size="7.5" fill="#5a7870">1</text>
+  <line x1="62" y1="100" x2="355" y2="100" stroke="#00C9A7" stroke-width="1.3" marker-end="url(#a0)"/>
+  <text x="150" y="96" text-anchor="middle" font-size="7.5" fill="#ddeae6">queryPOIs(pickup, dropoff)</text>
+  <!-- Step 2: POI results -->
+  <text x="30" y="122" font-size="7.5" fill="#5a7870">2</text>
+  <line x1="355" y1="122" x2="68" y2="122" stroke="#74C69D" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a2)"/>
+  <text x="195" y="118" text-anchor="middle" font-size="7.5" fill="#74C69D">approvedPOIs[ ]</text>
+  <!-- Step 3: choose tier + priority -->
+  <text x="30" y="148" font-size="7.5" fill="#5a7870">3</text>
+  <rect x="62" y="140" width="140" height="16" rx="3" fill="rgba(0,201,167,.08)" stroke="#00C9A7" stroke-width=".8"/>
+  <text x="132" y="152" text-anchor="middle" font-size="7" fill="#00C9A7">selectTier(STANDARD) + priority(EXPRESS)</text>
+  <!-- Step 4: calc instant price -->
+  <text x="30" y="175" font-size="7.5" fill="#5a7870">4</text>
+  <line x1="68" y1="175" x2="202" y2="175" stroke="#00C9A7" stroke-width="1.3" marker-end="url(#a0)"/>
+  <text x="135" y="171" text-anchor="middle" font-size="7.5" fill="#ddeae6">calcInstantPrice(distance,tier,priority)</text>
+  <line x1="202" y1="190" x2="68" y2="190" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a2)"/>
+  <text x="135" y="186" text-anchor="middle" font-size="7.5" fill="#4A9EFF">price: 45.00 SAR</text>
+  <!-- Step 5: confirm + create -->
+  <text x="30" y="215" font-size="7.5" fill="#5a7870">5</text>
+  <line x1="68" y1="215" x2="202" y2="215" stroke="#00C9A7" stroke-width="1.3" marker-end="url(#a0)"/>
+  <text x="135" y="211" text-anchor="middle" font-size="7.5" fill="#ddeae6">confirmOrder()</text>
+  <line x1="207" y1="228" x2="645" y2="228" stroke="#4A9EFF" stroke-width="1.3" marker-end="url(#a1)"/>
+  <text x="426" y="224" text-anchor="middle" font-size="7.5" fill="#4A9EFF">INSERT Delivery(status=PENDING, agentId=NULL)</text>
+  <!-- Step 6: auto broadcast -->
+  <text x="30" y="250" font-size="7.5" fill="#5a7870">6</text>
+  <line x1="207" y1="250" x2="500" y2="250" stroke="#4A9EFF" stroke-width="1.3" marker-end="url(#a3)"/>
+  <text x="353" y="246" text-anchor="middle" font-size="7.5" fill="#4A9EFF">broadcast(city, proximity+rating sort)</text>
+  <!-- Step 7: agent accepts -->
+  <text x="30" y="272" font-size="7.5" fill="#5a7870">7</text>
+  <line x1="500" y1="272" x2="212" y2="272" stroke="#FFB347" stroke-width="1.3" marker-end="url(#a1)"/>
+  <text x="353" y="268" text-anchor="middle" font-size="7.5" fill="#FFB347">acceptOrder(deliveryId)</text>
+  <line x1="207" y1="284" x2="645" y2="284" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)"/>
+  <text x="426" y="280" text-anchor="middle" font-size="7.5" fill="#4A9EFF">UPDATE status=ASSIGNED, agentId=agentX</text>
+  <!-- Step 8: agent goes to door -->
+  <text x="30" y="308" font-size="7.5" fill="#5a7870">8</text>
+  <rect x="468" y="300" width="74" height="16" rx="3" fill="rgba(255,179,71,.08)" stroke="#FFB347" stroke-width=".8"/>
+  <text x="505" y="312" text-anchor="middle" font-size="7" fill="#FFB347">Navigate to Pickup Door</text>
+  <!-- Step 9: SCAN parcel at door -->
+  <text x="30" y="332" font-size="7.5" fill="#5a7870">9</text>
+  <rect x="440" y="323" width="130" height="18" rx="3" fill="rgba(255,215,0,.1)" stroke="#FFD700" stroke-width="1.2"/>
+  <text x="505" y="336" text-anchor="middle" font-size="7.5" fill="#FFD700" font-weight="700">📷 SCAN parcel at door (QR/label)</text>
+  <line x1="500" y1="348" x2="212" y2="348" stroke="#FFB347" stroke-width="1.3" marker-end="url(#a1)"/>
+  <text x="353" y="344" text-anchor="middle" font-size="7.5" fill="#FFB347">scanParcel(deliveryId, barcode)</text>
+  <line x1="207" y1="360" x2="645" y2="360" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)"/>
+  <text x="426" y="356" text-anchor="middle" font-size="7.5" fill="#4A9EFF">UPDATE status=PICKED_UP · pickupTime=now · DeliveryEvent: PICKUP_CONFIRMED</text>
+  <!-- Step 10: direct transit -->
+  <text x="30" y="385" font-size="7.5" fill="#5a7870">10</text>
+  <rect x="468" y="377" width="74" height="16" rx="3" fill="rgba(255,179,71,.08)" stroke="#FFB347" stroke-width=".8"/>
+  <text x="505" y="389" text-anchor="middle" font-size="7" fill="#FFB347">Direct Transit → Destination</text>
+  <!-- loop GPS -->
+  <rect x="180" y="400" width="360" height="30" rx="4" fill="none" stroke="#3a5048" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="186" y="412" font-size="7" fill="#5a7870">loop [IN_TRANSIT]</text>
+  <line x1="500" y1="420" x2="212" y2="420" stroke="#FFB347" stroke-width=".8" stroke-dasharray="3,3" marker-end="url(#a3)"/>
+  <text x="353" y="416" text-anchor="middle" font-size="6.5" fill="#5a7870">locationUpdate(lat, lng) → DeliveryEvent</text>
+  <!-- Step 11: photo proof -->
+  <text x="30" y="450" font-size="7.5" fill="#5a7870">11</text>
+  <line x1="500" y1="450" x2="212" y2="450" stroke="#FFB347" stroke-width="1.3" marker-end="url(#a1)"/>
+  <text x="353" y="446" text-anchor="middle" font-size="7.5" fill="#FFB347">uploadProofPhoto(deliveryId, photo)</text>
+  <line x1="207" y1="462" x2="645" y2="462" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)"/>
+  <text x="426" y="458" text-anchor="middle" font-size="7.5" fill="#4A9EFF">INSERT DeliveryPhoto(photoType=PROOF)</text>
+  <!-- Step 12: signature -->
+  <text x="30" y="486" font-size="7.5" fill="#5a7870">12</text>
+  <line x1="500" y1="486" x2="212" y2="486" stroke="#FFB347" stroke-width="1.3" marker-end="url(#a1)"/>
+  <text x="353" y="482" text-anchor="middle" font-size="7.5" fill="#FFB347">collectSignature(deliveryId, sigData)</text>
+  <line x1="207" y1="498" x2="645" y2="498" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)"/>
+  <text x="426" y="494" text-anchor="middle" font-size="7.5" fill="#4A9EFF">INSERT DeliverySignature()</text>
+  <!-- Step 13: confirm delivered -->
+  <text x="30" y="522" font-size="7.5" fill="#5a7870">13</text>
+  <line x1="500" y1="522" x2="212" y2="522" stroke="#FFB347" stroke-width="1.3" marker-end="url(#a1)"/>
+  <text x="353" y="518" text-anchor="middle" font-size="7.5" fill="#FFB347">confirmDelivery(deliveryId)</text>
+  <line x1="207" y1="534" x2="645" y2="534" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)"/>
+  <text x="426" y="530" text-anchor="middle" font-size="7.5" fill="#4A9EFF">UPDATE status=DELIVERED · actualDeliveryTime · paymentStatus=PAID</text>
+  <!-- Step 14: notify client -->
+  <text x="30" y="558" font-size="7.5" fill="#5a7870">14</text>
+  <line x1="207" y1="558" x2="805" y2="558" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)"/>
+  <text x="506" y="554" text-anchor="middle" font-size="7.5" fill="#4A9EFF">PUSH: 'Your parcel has been delivered'</text>
+  <line x1="805" y1="570" x2="68" y2="570" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a0)"/>
+  <text x="350" y="566" text-anchor="middle" font-size="7.5" fill="#4A9EFF">deliveryNotification(status=DELIVERED)</text>
+  <!-- arrowhead defs reuse from parent SVG won't work — define inline -->
+  <defs>
+    <marker id="a0" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#00C9A7"/></marker>
+    <marker id="a1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4A9EFF"/></marker>
+    <marker id="a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#74C69D"/></marker>
+    <marker id="a3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FFB347"/></marker>
+    <marker id="a4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FF6B9D"/></marker>
+    <marker id="a5" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#B48AE8"/></marker>
+    <marker id="a6" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FFD700"/></marker>
+  </defs>
+  </g>
+  </svg>
+  </div>
 
-<line x1="240" y1="651" x2="410" y2="651" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
-<text x="325" y="646" text-anchor="middle" fill="#FF6B9D">23. INSERT BusDeliveryHandoff(toStation, deliveredBy)</text>
-</g>
-</svg>
+  <!-- S3b: SMALL PACKAGE RELAY -->
+  <div class="seq-deliv-sub" id="seqd-s3b">
+  <svg width="1400" height="980" viewBox="0 0 1400 980">
+  <rect width="1400" height="980" fill="#0e1512" rx="12"/>
+  <text x="700" y="26" text-anchor="middle" font-size="12" fill="#FFB347" font-weight="700" font-family="Syne,sans-serif">③b Small Package — Agent Relay (Long Distance)</text>
+  <defs>
+    <marker id="b0" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#00C9A7"/></marker>
+    <marker id="b1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4A9EFF"/></marker>
+    <marker id="b2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#74C69D"/></marker>
+    <marker id="b3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FFB347"/></marker>
+    <marker id="b4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#B48AE8"/></marker>
+    <marker id="b5" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FF6B9D"/></marker>
+  </defs>
+  <g font-family="JetBrains Mono,monospace">
+  <!-- Lifelines -->
+  <rect x="20"  y="44" width="80"  height="26" rx="4" fill="rgba(0,201,167,.15)"  stroke="#00C9A7" stroke-width="1.2"/><text x="60"  y="62" text-anchor="middle" font-size="8" fill="#00C9A7"  font-weight="700">CLIENT</text>
+  <rect x="155" y="44" width="90"  height="26" rx="4" fill="rgba(74,158,255,.15)" stroke="#4A9EFF" stroke-width="1.2"/><text x="200" y="62" text-anchor="middle" font-size="8" fill="#4A9EFF"  font-weight="700">SYSTEM/API</text>
+  <rect x="300" y="44" width="90"  height="26" rx="4" fill="rgba(255,107,157,.15)"stroke="#FF6B9D" stroke-width="1.2"/><text x="345" y="62" text-anchor="middle" font-size="8" fill="#FF6B9D"  font-weight="700">DATABASE</text>
+  <rect x="450" y="44" width="90"  height="26" rx="4" fill="rgba(255,179,71,.15)" stroke="#FFB347" stroke-width="1.2"/><text x="495" y="62" text-anchor="middle" font-size="8" fill="#FFB347"  font-weight="700">AGENT-LEG1</text>
+  <rect x="600" y="44" width="90"  height="26" rx="4" fill="rgba(180,138,232,.15)"stroke="#B48AE8" stroke-width="1.2"/><text x="645" y="62" text-anchor="middle" font-size="8" fill="#B48AE8"  font-weight="700">RELAY POINT</text>
+  <rect x="750" y="44" width="90"  height="26" rx="4" fill="rgba(180,138,232,.25)"stroke="#B48AE8" stroke-width="1.8"/><text x="795" y="62" text-anchor="middle" font-size="8" fill="#B48AE8"  font-weight="700">AGENT-LEG2</text>
+  <!-- Lifeline dashes -->
+  <line x1="60"  y1="70" x2="60"  y2="970" stroke="#00C9A7" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="200" y1="70" x2="200" y2="970" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="345" y1="70" x2="345" y2="970" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="495" y1="70" x2="495" y2="970" stroke="#FFB347" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="645" y1="70" x2="645" y2="970" stroke="#B48AE8" stroke-width="1" stroke-dasharray="3,4" opacity=".35"/>
+  <line x1="795" y1="70" x2="795" y2="970" stroke="#B48AE8" stroke-width="1" stroke-dasharray="3,4" opacity=".35"/>
+  <!-- Step 1 -->
+  <text x="4" y="100" font-size="7" fill="#5a7870">1</text>
+  <line x1="65" y1="100" x2="195" y2="100" stroke="#00C9A7" stroke-width="1.3" marker-end="url(#b1)"/>
+  <text x="130" y="96" text-anchor="middle" font-size="7.5" fill="#ddeae6">placeSmallPackageOrder()</text>
+  <line x1="200" y1="112" x2="340" y2="112" stroke="#4A9EFF" stroke-width="1" marker-end="url(#b5)"/>
+  <text x="270" y="108" text-anchor="middle" font-size="7" fill="#4A9EFF">detectLongDistanceRoute() → relay required</text>
+  <!-- Step 2 -->
+  <text x="4" y="132" font-size="7" fill="#5a7870">2</text>
+  <line x1="200" y1="132" x2="340" y2="132" stroke="#4A9EFF" stroke-width="1.3" marker-end="url(#b5)"/>
+  <text x="270" y="128" text-anchor="middle" font-size="7.5" fill="#4A9EFF">INSERT Delivery(status=PENDING, relayPointId=X)</text>
+  <line x1="200" y1="144" x2="65" y2="144" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#b0)"/>
+  <text x="130" y="140" text-anchor="middle" font-size="7" fill="#4A9EFF">price(base + relaySurcharge)</text>
+  <!-- Step 3 -->
+  <text x="4" y="164" font-size="7" fill="#5a7870">3</text>
+  <line x1="65" y1="164" x2="195" y2="164" stroke="#00C9A7" stroke-width="1.3" marker-end="url(#b1)"/>
+  <text x="130" y="160" text-anchor="middle" font-size="7.5" fill="#ddeae6">confirmOrder()</text>
+  <!-- Step 4: broadcast leg 1 -->
+  <text x="4" y="185" font-size="7" fill="#5a7870">4</text>
+  <line x1="200" y1="185" x2="490" y2="185" stroke="#4A9EFF" stroke-width="1.3" marker-end="url(#b3)"/>
+  <text x="345" y="181" text-anchor="middle" font-size="7.5" fill="#4A9EFF">broadcast LEG-1 to Agents near pickup</text>
+  <!-- Step 5: leg-1 accept + scan at door -->
+  <text x="4" y="210" font-size="7" fill="#5a7870">5</text>
+  <line x1="490" y1="210" x2="205" y2="210" stroke="#FFB347" stroke-width="1.3" marker-end="url(#b1)"/>
+  <text x="347" y="206" text-anchor="middle" font-size="7.5" fill="#FFB347">acceptLeg1(deliveryId)</text>
+  <!-- Step 6: scan at door -->
+  <text x="4" y="235" font-size="7" fill="#5a7870">6</text>
+  <rect x="458" y="227" width="74" height="16" rx="3" fill="rgba(255,215,0,.12)" stroke="#FFD700" stroke-width="1.2"/>
+  <text x="495" y="239" text-anchor="middle" font-size="7" fill="#FFD700" font-weight="700">📷 Scan at pickup door</text>
+  <line x1="490" y1="252" x2="205" y2="252" stroke="#FFB347" stroke-width="1.3" marker-end="url(#b1)"/>
+  <text x="347" y="248" text-anchor="middle" font-size="7.5" fill="#FFB347">scanParcel() → PICKUP_CONFIRMED, status=PICKED_UP</text>
+  <!-- Step 7: transit to relay -->
+  <text x="4" y="276" font-size="7" fill="#5a7870">7</text>
+  <rect x="458" y="268" width="74" height="16" rx="3" fill="rgba(255,179,71,.08)" stroke="#FFB347" stroke-width=".8"/>
+  <text x="495" y="280" text-anchor="middle" font-size="7" fill="#FFB347">Transit → Relay Point</text>
+  <!-- Step 8: handoff -->
+  <text x="4" y="305" font-size="7" fill="#5a7870">8</text>
+  <line x1="490" y1="305" x2="640" y2="305" stroke="#FFB347" stroke-width="1.3" marker-end="url(#b4)"/>
+  <text x="565" y="301" text-anchor="middle" font-size="7.5" fill="#FFB347">deliverToRelayPoint(parcelId)</text>
+  <line x1="200" y1="318" x2="340" y2="318" stroke="#4A9EFF" stroke-width="1" marker-end="url(#b5)"/>
+  <text x="270" y="314" text-anchor="middle" font-size="7" fill="#4A9EFF">INSERT DeliveryEvent: RELAY_HANDOFF</text>
+  <!-- relay zone separator -->
+  <line x1="30" y1="335" x2="870" y2="335" stroke="#B48AE8" stroke-width=".5" stroke-dasharray="6,4" opacity=".5"/>
+  <text x="440" y="345" text-anchor="middle" font-size="8" fill="#B48AE8" opacity=".8">── Relay Point Custody ── Second Leg Begins ──</text>
+  <!-- Step 9: broadcast leg 2 -->
+  <text x="4" y="365" font-size="7" fill="#5a7870">9</text>
+  <line x1="200" y1="365" x2="790" y2="365" stroke="#4A9EFF" stroke-width="1.3" marker-end="url(#b4)"/>
+  <text x="495" y="361" text-anchor="middle" font-size="7.5" fill="#4A9EFF">broadcast LEG-2 to Agents near relay</text>
+  <!-- Step 10: leg-2 accept -->
+  <text x="4" y="388" font-size="7" fill="#5a7870">10</text>
+  <line x1="790" y1="388" x2="205" y2="388" stroke="#B48AE8" stroke-width="1.3" marker-end="url(#b1)"/>
+  <text x="497" y="384" text-anchor="middle" font-size="7.5" fill="#B48AE8">acceptLeg2(deliveryId)</text>
+  <!-- Step 11: collect from relay -->
+  <text x="4" y="415" font-size="7" fill="#5a7870">11</text>
+  <line x1="790" y1="415" x2="645" y2="415" stroke="#B48AE8" stroke-width="1.3" marker-end="url(#b4)"/>
+  <text x="718" y="411" text-anchor="middle" font-size="7.5" fill="#B48AE8">collectParcel(relayId) — scan confirms custody</text>
+  <!-- Step 12: transit to destination -->
+  <text x="4" y="440" font-size="7" fill="#5a7870">12</text>
+  <rect x="758" y="432" width="74" height="16" rx="3" fill="rgba(180,138,232,.1)" stroke="#B48AE8" stroke-width=".8"/>
+  <text x="795" y="444" text-anchor="middle" font-size="7" fill="#B48AE8">Transit → Final Destination</text>
+  <!-- Step 13: photo + sig -->
+  <text x="4" y="465" font-size="7" fill="#5a7870">13</text>
+  <line x1="790" y1="465" x2="205" y2="465" stroke="#B48AE8" stroke-width="1.3" marker-end="url(#b1)"/>
+  <text x="497" y="461" text-anchor="middle" font-size="7.5" fill="#B48AE8">uploadProofPhoto() + collectSignature()</text>
+  <line x1="200" y1="477" x2="340" y2="477" stroke="#4A9EFF" stroke-width="1" marker-end="url(#b5)"/>
+  <text x="270" y="473" text-anchor="middle" font-size="7" fill="#4A9EFF">INSERT DeliveryPhoto + DeliverySignature</text>
+  <!-- Step 14: confirm delivered -->
+  <text x="4" y="500" font-size="7" fill="#5a7870">14</text>
+  <line x1="790" y1="500" x2="205" y2="500" stroke="#B48AE8" stroke-width="1.3" marker-end="url(#b1)"/>
+  <text x="497" y="496" text-anchor="middle" font-size="7.5" fill="#B48AE8">confirmDelivery(deliveryId)</text>
+  <line x1="200" y1="512" x2="340" y2="512" stroke="#4A9EFF" stroke-width="1" marker-end="url(#b5)"/>
+  <text x="270" y="508" text-anchor="middle" font-size="7" fill="#4A9EFF">UPDATE status=DELIVERED · paymentStatus=PAID</text>
+  <line x1="200" y1="524" x2="65" y2="524" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#b0)"/>
+  <text x="130" y="520" text-anchor="middle" font-size="7" fill="#4A9EFF">PUSH deliveryConfirmed()</text>
+  </g>
+  </svg>
+  </div>
+
+  <!-- S3c: LARGE PACKAGE DIRECT -->
+  <div class="seq-deliv-sub" id="seqd-s3c">
+  <svg width="1400" height="980" viewBox="0 0 1400 980">
+  <rect width="1400" height="980" fill="#0e1512" rx="12"/>
+  <text x="700" y="26" text-anchor="middle" font-size="12" fill="#FFB347" font-weight="700" font-family="Syne,sans-serif">③c Large Package — Direct Point-to-Point (Quote-Based)</text>
+  <defs>
+    <marker id="c0" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#00C9A7"/></marker>
+    <marker id="c1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4A9EFF"/></marker>
+    <marker id="c2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FF6B9D"/></marker>
+    <marker id="c3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#5b9bd5"/></marker>
+    <marker id="c4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FFD700"/></marker>
+    <marker id="c5" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#74C69D"/></marker>
+  </defs>
+  <g font-family="JetBrains Mono,monospace">
+  <!-- Lifelines -->
+  <rect x="20"  y="44" width="80" height="26" rx="4" fill="rgba(0,201,167,.15)"  stroke="#00C9A7" stroke-width="1.2"/><text x="60"  y="62" text-anchor="middle" font-size="8" fill="#00C9A7" font-weight="700">CLIENT</text>
+  <rect x="155" y="44" width="90" height="26" rx="4" fill="rgba(74,158,255,.15)" stroke="#4A9EFF" stroke-width="1.2"/><text x="200" y="62" text-anchor="middle" font-size="8" fill="#4A9EFF" font-weight="700">SYSTEM/API</text>
+  <rect x="300" y="44" width="90" height="26" rx="4" fill="rgba(255,107,157,.15)"stroke="#FF6B9D" stroke-width="1.2"/><text x="345" y="62" text-anchor="middle" font-size="8" fill="#FF6B9D" font-weight="700">DATABASE</text>
+  <rect x="450" y="44" width="90" height="26" rx="4" fill="rgba(91,155,213,.15)" stroke="#5b9bd5" stroke-width="1.2"/><text x="495" y="62" text-anchor="middle" font-size="8" fill="#5b9bd5" font-weight="700">DRIVER (Truck)</text>
+  <rect x="600" y="44" width="90" height="26" rx="4" fill="rgba(74,158,255,.1)"  stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="645" y="62" text-anchor="middle" font-size="8" fill="#4A9EFF" font-weight="700">NOTIFICATIONS</text>
+  <!-- Lifeline dashes -->
+  <line x1="60"  y1="70" x2="60"  y2="970" stroke="#00C9A7" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="200" y1="70" x2="200" y2="970" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="345" y1="70" x2="345" y2="970" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="495" y1="70" x2="495" y2="970" stroke="#5b9bd5" stroke-width="1" stroke-dasharray="3,4" opacity=".4"/>
+  <line x1="645" y1="70" x2="645" y2="970" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="3,4" opacity=".3"/>
+  <!-- Step 1: place job request -->
+  <text x="4" y="100" font-size="7" fill="#5a7870">1</text>
+  <line x1="65" y1="100" x2="195" y2="100" stroke="#00C9A7" stroke-width="1.3" marker-end="url(#c1)"/>
+  <text x="130" y="96" text-anchor="middle" font-size="7.5" fill="#ddeae6">placeLargePackageJob(category, description)</text>
+  <!-- Step 2: create job record -->
+  <text x="4" y="122" font-size="7" fill="#5a7870">2</text>
+  <line x1="200" y1="122" x2="340" y2="122" stroke="#4A9EFF" stroke-width="1.3" marker-end="url(#c2)"/>
+  <text x="270" y="118" text-anchor="middle" font-size="7" fill="#4A9EFF">INSERT Delivery(status=PENDING, type=LARGE, price=NULL)</text>
+  <!-- Step 3: broadcast to drivers -->
+  <text x="4" y="145" font-size="7" fill="#5a7870">3</text>
+  <line x1="200" y1="145" x2="490" y2="145" stroke="#4A9EFF" stroke-width="1.3" marker-end="url(#c3)"/>
+  <text x="345" y="141" text-anchor="middle" font-size="7.5" fill="#4A9EFF">broadcastJobToDrivers(vehicleType=TRUCK, originCity)</text>
+  <!-- quote loop -->
+  <rect x="155" y="155" width="400" height="55" rx="4" fill="none" stroke="#3a5048" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="162" y="167" font-size="7" fill="#5a7870">loop [drivers submit quotes]</text>
+  <!-- Step 4: driver submits quote -->
+  <text x="4" y="182" font-size="7" fill="#5a7870">4</text>
+  <line x1="490" y1="182" x2="205" y2="182" stroke="#5b9bd5" stroke-width="1.3" marker-end="url(#c1)"/>
+  <text x="347" y="178" text-anchor="middle" font-size="7.5" fill="#5b9bd5">submitQuote(driverId, price, conditions)</text>
+  <line x1="200" y1="194" x2="340" y2="194" stroke="#4A9EFF" stroke-width="1" marker-end="url(#c2)"/>
+  <text x="270" y="190" text-anchor="middle" font-size="7" fill="#4A9EFF">INSERT DriverQuote(deliveryId, driverId, price)</text>
+  <!-- Step 5: client notified of quotes -->
+  <text x="4" y="224" font-size="7" fill="#5a7870">5</text>
+  <line x1="200" y1="224" x2="640" y2="224" stroke="#4A9EFF" stroke-width="1" marker-end="url(#c1)"/>
+  <text x="420" y="220" text-anchor="middle" font-size="7.5" fill="#4A9EFF">PUSH: 'New quote received for your job'</text>
+  <line x1="640" y1="236" x2="65" y2="236" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#c0)"/>
+  <text x="350" y="232" text-anchor="middle" font-size="7" fill="#4A9EFF">quoteNotification(price, driverProfile)</text>
+  <!-- Step 6: client selects quote -->
+  <text x="4" y="260" font-size="7" fill="#5a7870">6</text>
+  <line x1="65" y1="260" x2="195" y2="260" stroke="#00C9A7" stroke-width="1.3" marker-end="url(#c1)"/>
+  <text x="130" y="256" text-anchor="middle" font-size="7.5" fill="#ddeae6">selectQuote(driverId, quoteId)</text>
+  <line x1="200" y1="272" x2="340" y2="272" stroke="#4A9EFF" stroke-width="1" marker-end="url(#c2)"/>
+  <text x="270" y="268" text-anchor="middle" font-size="7" fill="#4A9EFF">UPDATE status=ASSIGNED, driverId=X, price=quoted</text>
+  <!-- Step 7: notify driver -->
+  <text x="4" y="296" font-size="7" fill="#5a7870">7</text>
+  <line x1="200" y1="296" x2="490" y2="296" stroke="#4A9EFF" stroke-width="1.3" marker-end="url(#c3)"/>
+  <text x="345" y="292" text-anchor="middle" font-size="7.5" fill="#4A9EFF">PUSH: 'Your quote was accepted — confirm pickup'</text>
+  <!-- Step 8: driver prepares + load checklist -->
+  <text x="4" y="325" font-size="7" fill="#5a7870">8</text>
+  <rect x="455" y="317" width="80" height="16" rx="3" fill="rgba(255,215,0,.1)" stroke="#FFD700" stroke-width="1.2"/>
+  <text x="495" y="329" text-anchor="middle" font-size="7" fill="#FFD700" font-weight="700">Load items · confirm checklist</text>
+  <!-- Step 9: pickup confirmed -->
+  <text x="4" y="352" font-size="7" fill="#5a7870">9</text>
+  <line x1="490" y1="352" x2="205" y2="352" stroke="#5b9bd5" stroke-width="1.3" marker-end="url(#c1)"/>
+  <text x="347" y="348" text-anchor="middle" font-size="7.5" fill="#5b9bd5">confirmLoad(deliveryId, checklistData)</text>
+  <line x1="200" y1="364" x2="340" y2="364" stroke="#4A9EFF" stroke-width="1" marker-end="url(#c2)"/>
+  <text x="270" y="360" text-anchor="middle" font-size="7" fill="#4A9EFF">UPDATE status=PICKED_UP · pickupTime=now · DeliveryEvent: PICKUP_CONFIRMED</text>
+  <!-- Step 10: direct transit (no relay) -->
+  <text x="4" y="390" font-size="7" fill="#5a7870">10</text>
+  <rect x="458" y="382" width="74" height="16" rx="3" fill="rgba(91,155,213,.08)" stroke="#5b9bd5" stroke-width=".8"/>
+  <text x="495" y="394" text-anchor="middle" font-size="7" fill="#5b9bd5">Direct Transit (NO relay)</text>
+  <!-- loop GPS -->
+  <rect x="155" y="402" width="360" height="30" rx="4" fill="none" stroke="#3a5048" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="162" y="414" font-size="7" fill="#5a7870">loop [IN_TRANSIT — GPS stream]</text>
+  <line x1="490" y1="422" x2="205" y2="422" stroke="#5b9bd5" stroke-width=".8" stroke-dasharray="3,3" marker-end="url(#c1)"/>
+  <text x="347" y="418" text-anchor="middle" font-size="6.5" fill="#5a7870">locationUpdate(lat, lng) → DeliveryEvent</text>
+  <!-- Step 11: arrive destination + unload + photo -->
+  <text x="4" y="450" font-size="7" fill="#5a7870">11</text>
+  <rect x="455" y="442" width="80" height="16" rx="3" fill="rgba(255,215,0,.1)" stroke="#FFD700" stroke-width="1.2"/>
+  <text x="495" y="454" text-anchor="middle" font-size="7" fill="#FFD700" font-weight="700">Unload · 📸 Photo Proof</text>
+  <line x1="490" y1="468" x2="205" y2="468" stroke="#5b9bd5" stroke-width="1.3" marker-end="url(#c1)"/>
+  <text x="347" y="464" text-anchor="middle" font-size="7.5" fill="#5b9bd5">uploadProofPhoto(deliveryId, photo)</text>
+  <line x1="200" y1="480" x2="340" y2="480" stroke="#4A9EFF" stroke-width="1" marker-end="url(#c2)"/>
+  <text x="270" y="476" text-anchor="middle" font-size="7" fill="#4A9EFF">INSERT DeliveryPhoto(photoType=PROOF)</text>
+  <!-- Step 12: recipient confirms -->
+  <text x="4" y="504" font-size="7" fill="#5a7870">12</text>
+  <line x1="490" y1="504" x2="205" y2="504" stroke="#5b9bd5" stroke-width="1.3" marker-end="url(#c1)"/>
+  <text x="347" y="500" text-anchor="middle" font-size="7.5" fill="#5b9bd5">recipientConfirm(deliveryId) / collectSignature()</text>
+  <!-- Step 13: confirm delivered -->
+  <text x="4" y="528" font-size="7" fill="#5a7870">13</text>
+  <line x1="490" y1="528" x2="205" y2="528" stroke="#5b9bd5" stroke-width="1.3" marker-end="url(#c1)"/>
+  <text x="347" y="524" text-anchor="middle" font-size="7.5" fill="#5b9bd5">confirmDelivery(deliveryId)</text>
+  <line x1="200" y1="540" x2="340" y2="540" stroke="#4A9EFF" stroke-width="1" marker-end="url(#c2)"/>
+  <text x="270" y="536" text-anchor="middle" font-size="7" fill="#4A9EFF">UPDATE status=DELIVERED · paymentStatus=PAID (quoted amount)</text>
+  <!-- Step 14: notify client -->
+  <text x="4" y="562" font-size="7" fill="#5a7870">14</text>
+  <line x1="200" y1="562" x2="640" y2="562" stroke="#4A9EFF" stroke-width="1" marker-end="url(#c1)"/>
+  <text x="420" y="558" text-anchor="middle" font-size="7.5" fill="#4A9EFF">PUSH: 'Your delivery is complete'</text>
+  <line x1="640" y1="574" x2="65" y2="574" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#c0)"/>
+  <text x="350" y="570" text-anchor="middle" font-size="7" fill="#4A9EFF">deliveryConfirmed(status=DELIVERED)</text>
+  </g>
+  </svg>
+  </div>
 
 </div>
-</div>
+>
 <script>
-// ── Panel switching ──────────────────────────────────────────
+
 function switchPanel(id, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1597,7 +1905,6 @@ function switchPanel(id, btn) {
   btn.classList.add('active');
 }
 
-// ── Sequence sub-tab switching ───────────────────────────────
 function showSeq(id, btn) {
   document.querySelectorAll('.seq-flow').forEach(f => f.classList.remove('active'));
   document.querySelectorAll('.seq-tab').forEach(b => b.classList.remove('active'));
@@ -1605,7 +1912,15 @@ function showSeq(id, btn) {
   btn.classList.add('active');
 }
 
-// ── Tooltip ──────────────────────────────────────────────────
+function showSeqDelivSub(id, btn) {
+  document.querySelectorAll('.seq-deliv-sub').forEach(f => f.classList.remove('active'));
+  const panel = document.getElementById('seq-s3');
+  if (panel) panel.querySelectorAll('.seq-tab').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById('seqd-' + id);
+  if (el) el.classList.add('active');
+  btn.classList.add('active');
+}
+
 const tt = document.getElementById('tooltip');
 const ttTitle = document.getElementById('tt-title');
 const ttBody = document.getElementById('tt-body');
@@ -1629,9 +1944,8 @@ document.querySelectorAll('.dnode').forEach(el => {
   el.addEventListener('mouseleave', () => tt.classList.remove('show'));
 });
 
-// Also allow SVG g elements with data-title / data-desc (DFD nodes)
 document.querySelectorAll('g[data-t], g[data-title]').forEach(el => {
-  if (el.classList.contains('dnode')) return; // already handled
+  if (el.classList.contains('dnode')) return;
   el.style.cursor = 'pointer';
   el.addEventListener('mouseenter', e => {
     const t = el.dataset.t || el.dataset.title || '';
@@ -1650,6 +1964,7 @@ document.querySelectorAll('g[data-t], g[data-title]').forEach(el => {
   });
   el.addEventListener('mouseleave', () => tt.classList.remove('show'));
 });
+
 </script>
 </body>
 </html>

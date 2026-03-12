@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TRIGO — Delivery refined (small/large, instant/quote, door/agent)</title>
+<title>TRIGO — System Architecture Diagrams</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap');
 :root{
   --teal:#00C9A7;--teal2:#00876f;--teal-g:rgba(0,201,167,.14);--teal-g2:rgba(0,201,167,.06);
   --bg:#070b0a;--s1:#0e1512;--s2:#141c19;--s3:#1a2420;
   --border:rgba(0,201,167,.13);--text:#ddeae6;--dim:#5a7870;
-  --deliverySoft:#FFB347; --deliveryHard:#c97b2e; --livestock:#b86b2f;
 }
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden}
@@ -46,363 +45,1627 @@ svg text{font-family:'JetBrains Mono',monospace}
 <body>
 <div class="tt" id="tooltip"><div class="tt-title" id="tt-title"></div><div id="tt-body"></div></div>
 <header>
-  <div><div class="logo">TRiGO</div><div class="logo-sub">System Architecture — Delivery refined</div></div>
-  <div class="badge">SMALL/LARGE · INSTANT/QUOTE · DOOR/AGENT</div>
+  <div><div class="logo">TRiGO</div><div class="logo-sub">System Architecture Diagrams — v3.1 (Enhanced Delivery)</div></div>
+  <div class="badge">DFD · CLASS · SEQUENCE</div>
 </header>
 <div class="top-nav">
-  <button class="nav-btn active" onclick="switchPanel('dfd',this)"><span class="nav-icon">🌊</span>DFD (delivery focus)</button>
-  <button class="nav-btn" onclick="switchPanel('class',this)"><span class="nav-icon">🏗</span>Class (delivery entities)</button>
-  <button class="nav-btn" onclick="switchPanel('seq',this)"><span class="nav-icon">⏱</span>Delivery flows</button>
+  <button class="nav-btn active" onclick="switchPanel('dfd',this)"><span class="nav-icon">🌊</span>Data Flow Diagram</button>
+  <button class="nav-btn" onclick="switchPanel('class',this)"><span class="nav-icon">🏗</span>Class Diagram</button>
+  <button class="nav-btn" onclick="switchPanel('seq',this)"><span class="nav-icon">⏱</span>Sequence Diagram</button>
 </div>
-
-<!-- ========== PANEL 1: DFD (Delivery refined) ========= -->
+<!-- ══════════════════════════════════════════════════════════════
+     PANEL 1 — DATA FLOW DIAGRAM
+══════════════════════════════════════════════════════════════ -->
 <div class="panel active" id="panel-dfd">
 <div class="legend">
-  <span class="leg-title">Delivery types:</span>
-  <div class="leg-item"><div style="width:10px;height:10px;background:#FFB347;border-radius:2px"></div>Small package (instant)</div>
-  <div class="leg-item"><div style="width:10px;height:10px;background:#c97b2e;border-radius:2px"></div>Large package long (quote)</div>
-  <div class="leg-item"><div style="width:10px;height:10px;background:#b86b2f;border-radius:2px"></div>Livestock / removal (direct)</div>
-  <span style="font-size:9px;color:var(--dim);margin-left:8px">Door pickup · Agent handoff</span>
+  <span class="leg-title">Legend:</span>
+  <div class="leg-item"><div style="width:12px;height:12px;border-radius:50%;background:#00C9A7;flex-shrink:0"></div>External Entity</div>
+  <div class="leg-item"><div class="leg-sq" style="background:rgba(74,158,255,.25);border:1px solid #4A9EFF"></div>Process</div>
+  <div class="leg-item"><div style="width:12px;height:8px;background:none;border-left:3px solid #FF6B9D;border-right:3px solid #FF6B9D;flex-shrink:0"></div>Data Store</div>
+  <div class="leg-item"><div style="width:24px;height:2px;background:#00C9A7"></div>Data Flow</div>
+  <div class="leg-item"><div style="width:24px;height:1px;border-top:2px dashed #5a7870"></div>Optional / Read</div>
+  <span style="font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-left:8px">Hover nodes for details</span>
 </div>
 <div class="diagram-scroll">
-<svg width="1720" height="1200" viewBox="0 0 1720 1200">
+<svg width="1720" height="1300" viewBox="0 0 1720 1300">
 <defs>
-  <marker id="a0" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00C9A7"/></marker>
-  <marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FFB347"/></marker>
-  <marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#c97b2e"/></marker>
-  <filter id="glow"><feGaussianBlur stdDeviation="2.5"/></filter>
+  <marker id="a0" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00C9A7" opacity=".75"/></marker>
+  <marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4A9EFF" opacity=".75"/></marker>
+  <marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4D9DE0" opacity=".75"/></marker>
+  <marker id="a3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FFB347" opacity=".75"/></marker>
+  <marker id="a4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#B48AE8" opacity=".75"/></marker>
+  <marker id="a5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FFD700" opacity=".75"/></marker>
+  <marker id="a6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#74C69D" opacity=".75"/></marker>
+  <marker id="a7" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FFA500" opacity=".75"/></marker>
+  <filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 </defs>
-<!-- zones -->
-<rect x="2" y="2" width="1716" height="1196" rx="14" fill="#0e1512" stroke="rgba(0,201,167,.07)"/>
-<!-- external entities -->
-<g class="dnode" data-t="CLIENT (sender)" data-d="Initiates delivery, selects package type: small/parcel, large/removal/livestock. Chooses door pickup or dropoff.">
-  <circle cx="94" cy="130" r="34" fill="rgba(0,201,167,.12)" stroke="#00C9A7" stroke-width="1.5"/>
-  <text x="94" y="125" text-anchor="middle" font-size="16">👤</text>
-  <text x="94" y="139" text-anchor="middle" font-size="8.5" fill="#00C9A7">CLIENT</text>
-</g>
-<g class="dnode" data-t="AGENT (delivery)" data-d="For small packages: door pickup / scan. For large: handoff at hub. For livestock/removal: direct end-to-end.">
-  <circle cx="94" cy="310" r="34" fill="rgba(255,179,71,.12)" stroke="#FFB347" stroke-width="1.5"/>
-  <text x="94" y="305" text-anchor="middle" font-size="16">📦</text>
-  <text x="94" y="319" text-anchor="middle" fill="#FFB347">AGENT</text>
-</g>
-<g class="dnode" data-t="DRIVER (ride-hailing)" data-d="Used for small instant deliveries (short distance). Picks up from client door, goes direct to destination if short, else to agent hub.">
-  <circle cx="94" cy="490" r="34" fill="rgba(77,157,224,.12)" stroke="#4D9DE0" stroke-width="1.5"/>
-  <text x="94" y="485" text-anchor="middle" font-size="16">🚗</text>
-  <text x="94" y="499" text-anchor="middle" fill="#4D9DE0">DRIVER</text>
-</g>
-<g class="dnode" data-t="SPECIAL VEHICLE (truck/livestock)" data-d="For large packages (house removal, livestock). Instant if short distance, else requires quotation and scheduling.">
-  <circle cx="94" cy="680" r="34" fill="rgba(184,107,47,.12)" stroke="#b86b2f" stroke-width="1.5"/>
-  <text x="94" y="675" text-anchor="middle" font-size="16">🚛</text>
-  <text x="94" y="689" text-anchor="middle" fill="#b86b2f">SPECIAL</text>
-</g>
-<!-- processes delivery -->
-<g class="dnode" data-t="P3A — Delivery router" data-d="Receives order, classifies size (small/large) and distance (short/long). Routes: small → instant pricing/auto-match; large long → quotation; large short → instant direct.">
-  <rect x="220" y="80" width="150" height="80" rx="7" fill="rgba(255,179,71,.1)" stroke="#FFB347" stroke-width="1.5"/>
-  <text x="295" y="105" fill="#FFB347" font-weight="700">P3A — DELIVERY ROUTER</text>
-  <text x="295" y="120" font-size="7.5" fill="#aa8040">classify size/distance</text>
-  <text x="295" y="135" font-size="7.5" fill="#aa8040">small: instant, auto-match</text>
-  <text x="295" y="150" font-size="7.5" fill="#aa8040">large short: direct/instant</text>
-  <text x="295" y="165" font-size="7.5" fill="#aa8040">large long: quotation</text>
-</g>
-<g class="dnode" data-t="P3B — Instant pricing & auto‑match" data-d="For small packages (any distance) and large packages (short distance). Calculates dynamic price, matches to nearest driver/vehicle. Door pickup enabled.">
-  <rect x="220" y="200" width="150" height="70" rx="7" fill="rgba(255,179,71,.1)" stroke="#FFB347" stroke-width="1.5"/>
-  <text x="295" y="225" fill="#FFB347" font-weight="700">P3B — INSTANT</text>
-  <text x="295" y="240" font-size="7.5" fill="#aa8040">auto-match + door pickup</text>
-  <text x="295" y="255" font-size="7.5" fill="#aa8040">scan at door (small)</text>
-  <text x="295" y="270" font-size="7" fill="#785830">large short direct</text>
-</g>
-<g class="dnode" data-t="P3C — Quotation engine" data-d="For large packages long distance (removal, livestock). Client requests quote, admin/algorithm sets price. After acceptance, schedules special vehicle.">
-  <rect x="220" y="320" width="150" height="70" rx="7" fill="rgba(184,107,47,.1)" stroke="#b86b2f" stroke-width="1.5"/>
-  <text x="295" y="345" fill="#b86b2f" font-weight="700">P3C — QUOTATION</text>
-  <text x="295" y="360" font-size="7.5" fill="#985830">large long, livestock</text>
-  <text x="295" y="375" font-size="7.5" fill="#985830">admin pricing / auto-estimate</text>
-</g>
-<g class="dnode" data-t="P3D — Agent handoff & consolidation" data-d="For small packages going long distance: driver delivers to agent hub, then agent transports to destination. Scan handoff, proof of transfer.">
-  <rect x="420" y="80" width="160" height="70" rx="7" fill="rgba(255,179,71,.1)" stroke="#FFB347" stroke-width="1.5"/>
-  <text x="500" y="105" fill="#FFB347" font-weight="700">P3D — AGENT HANDOFF</text>
-  <text x="500" y="120" font-size="7.5" fill="#aa8040">driver→agent (scan),</text>
-  <text x="500" y="135" font-size="7.5" fill="#aa8040">agent→destination</text>
-</g>
-<g class="dnode" data-t="P3E — Direct large (short distance)" data-d="For house removal truck / livestock short distance. Instant booking, special vehicle goes direct door-to-door without handoff.">
-  <rect x="420" y="200" width="160" height="60" rx="7" fill="rgba(184,107,47,.1)" stroke="#b86b2f" stroke-width="1.5"/>
-  <text x="500" y="225" fill="#b86b2f" font-weight="700">P3E — DIRECT LARGE</text>
-  <text x="500" y="240" font-size="7.5" fill="#985830">short distance, instant</text>
-  <text x="500" y="255" font-size="7.5" fill="#985830">truck/livestock direct</text>
-</g>
-<g class="dnode" data-t="P3F — Door pickup & scan" data-d="Driver/agent scans package at client door (QR / barcode). Confirms pickup, triggers tracking. For small and large short.">
-  <rect x="420" y="320" width="160" height="60" rx="7" fill="rgba(74,158,255,.1)" stroke="#4A9EFF" stroke-width="1"/>
-  <text x="500" y="345" fill="#4A9EFF" font-weight="700">P3F — DOOR SCAN</text>
-  <text x="500" y="360" font-size="7.5" fill="#2a5080">QR / barcode, proof</text>
-</g>
-<!-- data stores -->
-<rect x="660" y="60" width="400" height="48" rx="0" fill="rgba(255,179,71,.05)" stroke="#FFB347" stroke-width="1.2"/>
-<text x="670" y="85" fill="#FFB347" font-weight="700">DS4 — DELIVERIES (enhanced)</text>
-<text x="670" y="100" font-size="7" fill="#886020">delivery_type: SMALL_PARCEL, LARGE_REMOVAL, LIVESTOCK</text>
-<text x="670" y="112" font-size="7" fill="#886020">pricing_model: INSTANT, QUOTE; handoff_required: boolean</text>
-<rect x="660" y="130" width="400" height="48" rx="0" fill="rgba(184,107,47,.05)" stroke="#b86b2f" stroke-width="1.2"/>
-<text x="670" y="155" fill="#b86b2f" font-weight="700">DS4b — QUOTATIONS</text>
-<text x="670" y="170" font-size="7" fill="#886020">quotes (status: REQUESTED, PRICED, ACCEPTED, EXPIRED)</text>
-<rect x="660" y="200" width="400" height="48" rx="0" fill="rgba(74,158,255,.05)" stroke="#4A9EFF" stroke-width="1.2"/>
-<text x="670" y="225" fill="#4A9EFF" font-weight="700">DS9 — LOCATIONS / ZONES</text>
-<text x="670" y="240" font-size="7" fill="#2a5080">distance classification: short/long thresholds per city</text>
 
-<!-- flows: client to router -->
-<line x1="128" y1="130" x2="220" y2="120" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="170" y="110" fill="#00C9A7" font-size="6.5">delivery request</text>
-<!-- router → inst/quotes -->
-<line x1="295" y1="160" x2="295" y2="200" stroke="#FFB347" stroke-width="1.5" marker-end="url(#a1)"/>
-<text x="310" y="180" fill="#FFB347" font-size="6.5">small, large short</text>
-<line x1="295" y1="160" x2="295" y2="320" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a2)"/>
-<text x="315" y="245" fill="#b86b2f" font-size="6.5">large long</text>
-<!-- instant → door scan + agent handoff -->
-<line x1="370" y1="235" x2="420" y2="235" stroke="#FFB347" stroke-width="1" marker-end="url(#a1)"/>
-<text x="395" y="225" fill="#FFB347" font-size="6">door pickup</text>
-<line x1="370" y1="250" x2="500" y2="320" stroke="#FFB347" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a1)"/>
-<text x="400" y="280" fill="#FFB347" font-size="6">long → agent handoff</text>
-<!-- driver to door scan, agent to handoff etc -->
-<line x1="128" y1="490" x2="420" y2="350" stroke="#4D9DE0" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,2"/>
-<text x="200" y="430" fill="#4D9DE0" font-size="6">door pickup by driver</text>
-<line x1="128" y1="310" x2="500" y2="115" stroke="#FFB347" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,2"/>
-<!-- quotation to special vehicle -->
-<line x1="295" y1="390" x2="94" y2="670" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a2)"/>
-<text x="160" y="550" fill="#b86b2f" font-size="6">quote accepted → schedule</text>
-<!-- direct large (short) line -->
-<line x1="500" y1="260" x2="94" y2="670" stroke="#b86b2f" stroke-width="1" marker-end="url(#a2)"/>
-<text x="270" y="500" fill="#b86b2f" font-size="6">short large direct</text>
+<!-- Background -->
+<rect x="2" y="2" width="1716" height="1296" rx="14" fill="#0e1512" stroke="rgba(0,201,167,.07)" stroke-width="1"/>
+
+<!-- Zone labels -->
+<rect x="14" y="14" width="160" height="1268" rx="6" fill="rgba(0,201,167,.025)" stroke="rgba(0,201,167,.07)" stroke-dasharray="4,3"/>
+<text x="94" y="34" text-anchor="middle" font-size="7.5" fill="#2a5048" letter-spacing="2">EXTERNAL ACTORS</text>
+<rect x="184" y="14" width="1070" height="1268" rx="6" fill="rgba(74,158,255,.018)" stroke="rgba(74,158,255,.06)" stroke-dasharray="4,3"/>
+<text x="719" y="34" text-anchor="middle" font-size="7.5" fill="#1a2848" letter-spacing="2">TRIGO PLATFORM — CORE PROCESSING</text>
+<rect x="1264" y="14" width="444" height="1268" rx="6" fill="rgba(255,107,157,.018)" stroke="rgba(255,107,157,.06)" stroke-dasharray="4,3"/>
+<text x="1486" y="34" text-anchor="middle" font-size="7.5" fill="#4a1828" letter-spacing="2">DATA STORES</text>
+
+<!-- ── EXTERNAL ENTITIES ── -->
+<g class="dnode" data-t="CLIENT" data-d="Passenger. Books rides, places deliveries, manages wallet and rewards. Primary data generator.">
+  <circle cx="94" cy="115" r="34" fill="rgba(0,201,167,.12)" stroke="#00C9A7" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="94" y="110" text-anchor="middle" font-size="16">👤</text>
+  <text x="94" y="124" text-anchor="middle" font-size="8.5" fill="#00C9A7" font-weight="700">CLIENT</text>
+</g>
+<g class="dnode" data-t="DRIVER" data-d="Ride-hailing and delivery driver. Handles door pickup, scans packages, delivers to destination OR transfers to agent. For long distance: picks up from agent for final delivery. Submits docs, receives trips, sends GPS location, completes safety checks.">
+  <circle cx="94" cy="265" r="34" fill="rgba(77,157,224,.12)" stroke="#4D9DE0" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="94" y="260" text-anchor="middle" font-size="16">🚗</text>
+  <text x="94" y="274" text-anchor="middle" font-size="8.5" fill="#4D9DE0" font-weight="700">DRIVER</text>
+</g>
+<g class="dnode" data-t="DELIVERY AGENT" data-d="Delivery warehouse keeper. Manages delivery storage, scanning, and coordination. Receives packages from drivers, stores them, coordinates handoffs. Maintains inventory, handles package scanning, manages transfer between agents via truck network. Not a transporter.">
+  <circle cx="94" cy="420" r="34" fill="rgba(255,179,71,.12)" stroke="#FFB347" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="94" y="415" text-anchor="middle" font-size="16">🏪</text>
+  <text x="94" y="429" text-anchor="middle" font-size="8.5" fill="#FFB347" font-weight="700">AGENT</text>
+</g>
+<g class="dnode" data-t="BUS EMPLOYEE" data-d="Station operator and business owner. Runs onboarding wizard, registers buses, schedules trips, books seats, confirms cargo.">
+  <circle cx="94" cy="580" r="34" fill="rgba(180,138,232,.12)" stroke="#B48AE8" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="94" y="575" text-anchor="middle" font-size="16">🚌</text>
+  <text x="94" y="589" text-anchor="middle" font-size="8.5" fill="#B48AE8" font-weight="700">BUS EMP</text>
+</g>
+<g class="dnode" data-t="TRUCK DRIVER" data-d="Specialized transport driver. Transports small parcels between agents for long-distance deliveries. Handles large deliveries with specialized trucks. Follows truck-specific rules and regulations. Manages agent-to-agent logistics and large package direct delivery.">
+  <circle cx="94" cy="660" r="34" fill="rgba(255,140,0,.12)" stroke="#FF8C00" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="94" y="655" text-anchor="middle" font-size="16">🚛</text>
+  <text x="94" y="669" text-anchor="middle" font-size="8.5" fill="#FF8C00" font-weight="700">TRUCK DRV</text>
+</g>
+<g class="dnode" data-t="BUS MANAGER" data-d="Operations manager. Phone OTP auth. Monitors assigned stations — trips, occupancy, deliveries, employees. Read-heavy role.">
+  <circle cx="94" cy="730" r="34" fill="rgba(180,138,232,.08)" stroke="#B48AE8" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="94" y="725" text-anchor="middle" font-size="16">🏢</text>
+  <text x="94" y="739" text-anchor="middle" font-size="8.5" fill="#B48AE8" font-weight="700">BUS MGR</text>
+</g>
+<g class="dnode" data-t="HOUSE REMOVAL TRUCK" data-d="Specialized large package transport. Handles house removals, furniture, and oversized items. Direct location-to-destination delivery for large packages. No intermediate stops. GPS tracking, special equipment, trained personnel.">
+  <circle cx="94" cy="810" r="34" fill="rgba(255,99,71,.12)" stroke="#FF6347" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="94" y="805" text-anchor="middle" font-size="16">🚚</text>
+  <text x="94" y="819" text-anchor="middle" font-size="8.5" fill="#FF6347" font-weight="700">REMOVAL</text>
+</g>
+<g class="dnode" data-t="LIVESTOCK TRANSPORT" data-d="Specialized animal transport service. Direct location-to-destination delivery for livestock. Climate control, ventilation, safety protocols, certified handlers. GPS tracking with environmental monitoring.">
+  <circle cx="94" cy="890" r="34" fill="rgba(34,139,34,.12)" stroke="#228B22" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="94" y="885" text-anchor="middle" font-size="16">🐄</text>
+  <text x="94" y="899" text-anchor="middle" font-size="8.5" fill="#228B22" font-weight="700">LIVESTOCK</text>
+</g>
+<g class="dnode" data-t="ADMIN" data-d="Platform administrator. Approves documents, verifies agents and bus employees, configures reward rates and city capacity. Zero Map Locator access.">
+  <circle cx="94" cy="970" r="34" fill="rgba(255,215,0,.12)" stroke="#FFD700" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="94" y="965" text-anchor="middle" font-size="16">⚙️</text>
+  <text x="94" y="979" text-anchor="middle" font-size="8.5" fill="#FFD700" font-weight="700">ADMIN</text>
+</g>
+<g class="dnode" data-t="MAP LOCATOR (External)" data-d="Independent external platform. TRIGO queries APPROVED POIs read-only via shared DB connection. No writes ever. Used for trip/delivery address search, driver map overlay, and bus station enrichment.">
+  <circle cx="94" cy="1060" r="34" fill="rgba(116,198,157,.12)" stroke="#74C69D" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="94" y="1055" text-anchor="middle" font-size="16">📍</text>
+  <text x="94" y="1069" text-anchor="middle" font-size="8.5" fill="#74C69D" font-weight="700">MAP LOCATOR</text>
+</g>
+
+<!-- ── PROCESSES (left column) ── -->
+<!-- P1 Auth -->
+<g class="dnode" data-t="P1 — Auth &amp; OTP" data-d="Handles registration, login, OTP (EMAIL: Client/Driver/Agent/BusEmp; PHONE: BusManager). Creates User, AuthProvider, UserSession, OTPVerification.">
+  <rect x="200" y="80" width="148" height="70" rx="7" fill="rgba(74,158,255,.1)" stroke="#4A9EFF" stroke-width="1.5"/>
+  <text x="274" y="103" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">P1 — AUTH &amp; OTP</text>
+  <text x="274" y="117" text-anchor="middle" font-size="7.5" fill="#2a4060">VERIFICATION</text>
+  <text x="274" y="131" text-anchor="middle" font-size="7.5" fill="#2a4060">User · Session · OTP</text>
+  <text x="274" y="143" text-anchor="middle" font-size="7.5" fill="#2a4060">AuthProvider</text>
+</g>
+<!-- P2 Ride Booking -->
+<g class="dnode" data-t="P2 — Ride Booking Engine" data-d="Processes shared and private ride requests. Queries Map Locator POIs for location suggestions. Creates Trip, SharedRideRequest, TripStop. Manages seat allocation, auto-accept, discount and back-to-home flags.">
+  <rect x="200" y="200" width="148" height="80" rx="7" fill="rgba(0,201,167,.1)" stroke="#00C9A7" stroke-width="1.5"/>
+  <text x="274" y="223" text-anchor="middle" font-size="8.5" fill="#00C9A7" font-weight="700">P2 — RIDE BOOKING</text>
+  <text x="274" y="237" text-anchor="middle" font-size="7.5" fill="#1a5048">ENGINE</text>
+  <text x="274" y="251" text-anchor="middle" font-size="7.5" fill="#1a5048">Trip · SharedRideReq</text>
+  <text x="274" y="265" text-anchor="middle" font-size="7.5" fill="#1a5048">TripStop · Rating</text>
+  <text x="274" y="273" text-anchor="middle" font-size="7" fill="#0a3028">TripCancellation · Options</text>
+</g>
+<!-- P3 Delivery -->
+<g class="dnode" data-t="P3 — Delivery Pipeline" data-d="Flow: Driver door pickup→scan→(short) direct destination OR (long) to agent. Agent stores & coordinates. Truck driver transports small parcels between agents. Driver picks up from agent for final delivery. Large packages: instant short distance, quoting long distance, truck driver handles large direct delivery. Full audit via DeliveryEvent.">
+  <rect x="200" y="338" width="148" height="110" rx="7" fill="rgba(255,179,71,.1)" stroke="#FFB347" stroke-width="1.5"/>
+  <text x="274" y="361" text-anchor="middle" font-size="8.5" fill="#FFB347" font-weight="700">P3 — DELIVERY</text>
+  <text x="274" y="375" text-anchor="middle" font-size="7.5" fill="#604020">PIPELINE v2.1</text>
+  <text x="274" y="389" text-anchor="middle" font-size="7.5" fill="#604020">Driver: Door pickup→Scan</text>
+  <text x="274" y="403" text-anchor="middle" font-size="7.5" fill="#604020">Agent: Keeper/Storage</text>
+  <text x="274" y="417" text-anchor="middle" font-size="7.5" fill="#402810">Truck: Agent→Agent/Large</text>
+  <text x="274" y="431" text-anchor="middle" font-size="7" fill="#402810">Driver: Agent→Destination</text>
+  <text x="274" y="443" text-anchor="middle" font-size="7" fill="#302010">Small/Large · Instant/Quote</text>
+</g>
+<!-- P4 Bus Ops -->
+<g class="dnode" data-t="P4 — Bus Operations" data-d="Full bus lifecycle: onboarding wizard (BusStandard → BusSeatClass → BusSeat), trip scheduling (BusTrip), seat booking (BusSeatBooking, unique busTripId+busSeatId prevents double-booking), cargo delivery (BusDelivery → BusDeliveryHandoff).">
+  <rect x="200" y="470" width="148" height="80" rx="7" fill="rgba(180,138,232,.1)" stroke="#B48AE8" stroke-width="1.5"/>
+  <text x="274" y="493" text-anchor="middle" font-size="8.5" fill="#B48AE8" font-weight="700">P4 — BUS OPS</text>
+  <text x="274" y="507" text-anchor="middle" font-size="7.5" fill="#4a2870">BusTrip · BusSeat</text>
+  <text x="274" y="521" text-anchor="middle" font-size="7.5" fill="#4a2870">Booking · BusDelivery</text>
+  <text x="274" y="535" text-anchor="middle" font-size="7.5" fill="#4a2870">Handoff · Standard</text>
+  <text x="274" y="543" text-anchor="middle" font-size="7" fill="#2a1848">BusEmployeeStation</text>
+</g>
+<!-- P5 Rewards -->
+<g class="dnode" data-t="P5 — Rewards &amp; Wallet Engine" data-d="Credits reward points on trip completion, referral signup, referral first trip, milestones. Manages point redemption (TRIP_DISCOUNT, WALLET_CREDIT). Wallet balance, Quick Transfer with password confirmation. WalletTransaction ledger with balanceAfter.">
+  <rect x="200" y="602" width="148" height="80" rx="7" fill="rgba(255,165,0,.1)" stroke="#FFA500" stroke-width="1.5"/>
+  <text x="274" y="625" text-anchor="middle" font-size="8.5" fill="#FFA500" font-weight="700">P5 — REWARDS</text>
+  <text x="274" y="639" text-anchor="middle" font-size="8.5" fill="#FFA500" font-weight="700">&amp; WALLET</text>
+  <text x="274" y="655" text-anchor="middle" font-size="7.5" fill="#604000">RewardActivity</text>
+  <text x="274" y="669" text-anchor="middle" font-size="7.5" fill="#604000">WalletTransaction</text>
+  <text x="274" y="677" text-anchor="middle" font-size="7" fill="#402800">RewardRedemption</text>
+</g>
+<!-- P6 Doc Verify -->
+<g class="dnode" data-t="P6 — Document &amp; Verification" data-d="Stores driver/vehicle documents. Tracks expiresAt — EXPIRED docs block Driver going ONLINE. Admin approves/rejects. Manages Agent.verificationStatus and BusEmployee.verificationStatus lifecycle.">
+  <rect x="200" y="734" width="148" height="80" rx="7" fill="rgba(255,215,0,.1)" stroke="#FFD700" stroke-width="1.5"/>
+  <text x="274" y="757" text-anchor="middle" font-size="8.5" fill="#FFD700" font-weight="700">P6 — DOCUMENT</text>
+  <text x="274" y="771" text-anchor="middle" font-size="8.5" fill="#FFD700" font-weight="700">&amp; VERIFICATION</text>
+  <text x="274" y="787" text-anchor="middle" font-size="7.5" fill="#604000">Document (expiry)</text>
+  <text x="274" y="801" text-anchor="middle" font-size="7.5" fill="#604000">Agent · BusEmployee</text>
+  <text x="274" y="809" text-anchor="middle" font-size="7" fill="#402800">VerificationStatus</text>
+</g>
+<!-- P7 Capacity -->
+<g class="dnode" data-t="P7 — Capacity &amp; Waitlist" data-d="Checks CityRideCapacity. If at limit: INSERT DriverWaitlist(WAITING). When slot opens: UPDATE PROMOTED, stamp promotedAt + notifiedAt, push notification to driver.">
+  <rect x="200" y="866" width="148" height="70" rx="7" fill="rgba(74,158,255,.08)" stroke="#4A9EFF" stroke-width="1.5"/>
+  <text x="274" y="889" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">P7 — CAPACITY</text>
+  <text x="274" y="903" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">&amp; WAITLIST</text>
+  <text x="274" y="919" text-anchor="middle" font-size="7.5" fill="#2a4060">CityRideCapacity</text>
+  <text x="274" y="929" text-anchor="middle" font-size="7.5" fill="#2a4060">DriverWaitlist</text>
+</g>
+
+<!-- ── SECONDARY PROCESSES ── -->
+<!-- P8 Comms -->
+<g class="dnode" data-t="P8 — Communication Hub" data-d="In-trip messaging (TEXT/IMAGE/VOICE/DOCUMENT) with MessageReadReceipt. Call sessions (VOICE/VIDEO): INITIATED→RINGING→ACCEPTED→ENDED. CallEventLog tracks all events. All linked to Trip.">
+  <rect x="420" y="200" width="140" height="80" rx="7" fill="rgba(74,158,255,.08)" stroke="#4A9EFF" stroke-width="1"/>
+  <text x="490" y="223" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">P8 — COMMS</text>
+  <text x="490" y="237" text-anchor="middle" font-size="7.5" fill="#2a4060">HUB</text>
+  <text x="490" y="251" text-anchor="middle" font-size="7.5" fill="#2a4060">Message · CallSession</text>
+  <text x="490" y="265" text-anchor="middle" font-size="7.5" fill="#2a4060">CallEventLog</text>
+  <text x="490" y="273" text-anchor="middle" font-size="7" fill="#1a3050">MessageReadReceipt</text>
+</g>
+<!-- P9 Location -->
+<g class="dnode" data-t="P9 — Location &amp; Map Services" data-d="Manages Location records (PostGIS geometry Point 4326), City boundaries (polygon/radius), DriverLocation live tracking. Queries Map Locator POIs read-only (APPROVED only). Stores SavedPlace. Cross-refs bus stations by coordinates.">
+  <rect x="420" y="338" width="140" height="80" rx="7" fill="rgba(116,198,157,.1)" stroke="#74C69D" stroke-width="1"/>
+  <text x="490" y="361" text-anchor="middle" font-size="8.5" fill="#74C69D" font-weight="700">P9 — LOCATION</text>
+  <text x="490" y="375" text-anchor="middle" font-size="8.5" fill="#74C69D" font-weight="700">&amp; MAP</text>
+  <text x="490" y="391" text-anchor="middle" font-size="7.5" fill="#1a4030">Location · City</text>
+  <text x="490" y="405" text-anchor="middle" font-size="7.5" fill="#1a4030">DriverLocation</text>
+  <text x="490" y="413" text-anchor="middle" font-size="7" fill="#0a2820">SavedPlace · PostGIS</text>
+</g>
+<!-- P10 Reporting -->
+<g class="dnode" data-t="P10 — Reporting &amp; Compliance" data-d="Delivery report lifecycle: PENDING→IN_PROGRESS→RESOLVED/REJECTED/ESCALATED. Stores DeliveryReportAttachment. Admin handles ESCALATED reports. Monitors doc expiry, agent performance metrics.">
+  <rect x="420" y="470" width="140" height="80" rx="7" fill="rgba(255,107,157,.1)" stroke="#FF6B9D" stroke-width="1"/>
+  <text x="490" y="493" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">P10 — REPORTING</text>
+  <text x="490" y="507" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">&amp; COMPLIANCE</text>
+  <text x="490" y="523" text-anchor="middle" font-size="7.5" fill="#602040">DeliveryReport</text>
+  <text x="490" y="537" text-anchor="middle" font-size="7.5" fill="#602040">ReportAttachment</text>
+  <text x="490" y="545" text-anchor="middle" font-size="7" fill="#401030">ESCALATED → Admin</text>
+</g>
+<!-- P11 Notify -->
+<g class="dnode" data-t="P11 — Notification Dispatcher" data-d="Dispatches push notifications for: ride requests/acceptance/completion, delivery status, waitlist promotions, document expiry alerts, OTP, reward point credits. Covers all roles.">
+  <rect x="420" y="602" width="140" height="70" rx="7" fill="rgba(74,158,255,.06)" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="490" y="625" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">P11 — NOTIFY</text>
+  <text x="490" y="639" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">DISPATCHER</text>
+  <text x="490" y="655" text-anchor="middle" font-size="7.5" fill="#2a4060">Push · SMS · Email</text>
+  <text x="490" y="663" text-anchor="middle" font-size="7" fill="#1a3050">All roles covered</text>
+</g>
+<!-- P12 Safety Check -->
+<g class="dnode" data-t="P12 — Safety Check Logger" data-d="Records mandatory pre-session DriverSafetyCheck. Front: Fuel, Wipers, Mirrors, Lights, Brakes, Tires. Rear: Back Lights, Plate, Turn Signal, Exhaust. All 10 items required before PRIVATE ride session.">
+  <rect x="420" y="866" width="140" height="70" rx="7" fill="rgba(77,157,224,.08)" stroke="#4D9DE0" stroke-width="1"/>
+  <text x="490" y="889" text-anchor="middle" font-size="8.5" fill="#4D9DE0" font-weight="700">P12 — SAFETY</text>
+  <text x="490" y="903" text-anchor="middle" font-size="8.5" fill="#4D9DE0" font-weight="700">CHECK LOGGER</text>
+  <text x="490" y="919" text-anchor="middle" font-size="7.5" fill="#2a4060">DriverSafetyCheck</text>
+  <text x="490" y="929" text-anchor="middle" font-size="7" fill="#1a3050">10 items · per session</text>
+</g>
+
+<!-- ── DATA STORES ── -->
+<!-- DS helper macro: left bar + right bar + content -->
+<!-- DS1 Users & Auth -->
+<g class="dnode" data-t="DS1 — Users &amp; Auth" data-d="Tables: users, auth_providers, user_sessions, otp_verifications. All user identities, sessions and OTP records across every role.">
+  <rect x="1280" y="52" width="420" height="48" rx="0" fill="rgba(74,158,255,.05)" stroke="#4A9EFF" stroke-width="1.2"/>
+  <rect x="1280" y="52" width="4" height="48" fill="#4A9EFF" opacity=".7"/>
+  <rect x="1696" y="52" width="4" height="48" fill="#4A9EFF" opacity=".7"/>
+  <text x="1296" y="70" font-size="7.5" fill="#4A9EFF" font-weight="700">DS1 — USERS &amp; AUTH</text>
+  <text x="1296" y="84" font-size="7" fill="#2a4060">users · auth_providers · user_sessions · otp_verifications</text>
+  <text x="1296" y="94" font-size="7" fill="#1a3050">PostGIS: none | Indexes: role, status, email, phone, deletedAt</text>
+</g>
+<!-- DS2 Trips -->
+<g class="dnode" data-t="DS2 — Trips" data-d="Tables: trips, shared_ride_requests, trip_stops, trip_ratings, trip_cancellations, trip_options, trip_trip_options. Core ride-hailing transactional data.">
+  <rect x="1280" y="108" width="420" height="48" rx="0" fill="rgba(0,201,167,.05)" stroke="#00C9A7" stroke-width="1.2"/>
+  <rect x="1280" y="108" width="4" height="48" fill="#00C9A7" opacity=".7"/>
+  <rect x="1696" y="108" width="4" height="48" fill="#00C9A7" opacity=".7"/>
+  <text x="1296" y="126" font-size="7.5" fill="#00C9A7" font-weight="700">DS2 — TRIPS</text>
+  <text x="1296" y="140" font-size="7" fill="#1a5048">trips · shared_ride_requests · trip_stops · trip_ratings</text>
+  <text x="1296" y="150" font-size="7" fill="#0a3028">trip_cancellations · trip_options</text>
+</g>
+<!-- DS3 Drivers -->
+<g class="dnode" data-t="DS3 — Drivers &amp; Vehicles" data-d="Tables: drivers, driver_locations, vehicles, driver_safety_checks, driver_waitlists. Driver profile, live GPS, vehicle registration, per-session safety checks, and capacity waitlist.">
+  <rect x="1280" y="164" width="420" height="48" rx="0" fill="rgba(77,157,224,.05)" stroke="#4D9DE0" stroke-width="1.2"/>
+  <rect x="1280" y="164" width="4" height="48" fill="#4D9DE0" opacity=".7"/>
+  <rect x="1696" y="164" width="4" height="48" fill="#4D9DE0" opacity=".7"/>
+  <text x="1296" y="182" font-size="7.5" fill="#4D9DE0" font-weight="700">DS3 — DRIVERS &amp; VEHICLES</text>
+  <text x="1296" y="196" font-size="7" fill="#2a4060">drivers · driver_locations · vehicles · driver_safety_checks</text>
+  <text x="1296" y="206" font-size="7" fill="#1a3050">driver_waitlists · city_ride_capacities</text>
+</g>
+<!-- DS4 Deliveries -->
+<g class="dnode" data-t="DS4 — Deliveries" data-d="Tables: deliveries (type: SMALL/LARGE, pricing: INSTANT/QUOTE), delivery_events, delivery_photos, delivery_signatures, agents (keeper), truck_drivers, delivery_quotes, delivery_scans, agent_inventories. Flow: driver→agent→truck→agent→driver for long distance, driver→destination for short.">
+  <rect x="1280" y="220" width="420" height="64" rx="0" fill="rgba(255,179,71,.05)" stroke="#FFB347" stroke-width="1.2"/>
+  <rect x="1280" y="220" width="4" height="64" fill="#FFB347" opacity=".7"/>
+  <rect x="1696" y="220" width="4" height="64" fill="#FFB347" opacity=".7"/>
+  <text x="1296" y="238" font-size="7.5" fill="#FFB347" font-weight="700">DS4 — DELIVERIES v2.1</text>
+  <text x="1296" y="252" font-size="7" fill="#604020">deliveries · delivery_events · delivery_photos · delivery_signatures</text>
+  <text x="1296" y="262" font-size="7" fill="#402810">agents (keeper) · truck_drivers · delivery_quotes · delivery_scans</text>
+  <text x="1296" y="272" font-size="7" fill="#302010">agent_inventories · driver→agent→truck→agent→driver flow</text>
+  <text x="1296" y="282" font-size="7" fill="#201000">SMALL/LARGE · INSTANT/QUOTE · DOOR_PICKUP · AGENT_STORAGE</text>
+</g>
+<!-- DS5 Bus -->
+<g class="dnode" data-t="DS5 — Bus Module" data-d="Tables: bus_stations, bus_standards, bus_seat_classes, bus_seats, buses, bus_trips, bus_seat_bookings, bus_deliveries, bus_delivery_handoffs, bus_employee_stations, bus_manager_stations.">
+  <rect x="1280" y="276" width="420" height="48" rx="0" fill="rgba(180,138,232,.05)" stroke="#B48AE8" stroke-width="1.2"/>
+  <rect x="1280" y="276" width="4" height="48" fill="#B48AE8" opacity=".7"/>
+  <rect x="1696" y="276" width="4" height="48" fill="#B48AE8" opacity=".7"/>
+  <text x="1296" y="294" font-size="7.5" fill="#B48AE8" font-weight="700">DS5 — BUS MODULE</text>
+  <text x="1296" y="308" font-size="7" fill="#4a2870">stations · standards · seat_classes · seats · buses</text>
+  <text x="1296" y="318" font-size="7" fill="#2a1848">trips · bookings · deliveries · handoffs · emp/mgr stations</text>
+</g>
+<!-- DS6 Rewards -->
+<g class="dnode" data-t="DS6 — Rewards &amp; Wallet" data-d="Tables: reward_activities, reward_redemptions, wallets, wallet_transactions. Tracks all point events, redemption records, wallet balances, and transfer ledger with balanceAfter snapshot.">
+  <rect x="1280" y="332" width="420" height="48" rx="0" fill="rgba(255,165,0,.05)" stroke="#FFA500" stroke-width="1.2"/>
+  <rect x="1280" y="332" width="4" height="48" fill="#FFA500" opacity=".7"/>
+  <rect x="1696" y="332" width="4" height="48" fill="#FFA500" opacity=".7"/>
+  <text x="1296" y="350" font-size="7.5" fill="#FFA500" font-weight="700">DS6 — REWARDS &amp; WALLET</text>
+  <text x="1296" y="364" font-size="7" fill="#604000">reward_activities · reward_redemptions</text>
+  <text x="1296" y="374" font-size="7" fill="#402800">wallets · wallet_transactions (balanceAfter)</text>
+</g>
+<!-- DS7 Documents -->
+<g class="dnode" data-t="DS7 — Documents" data-d="Table: documents. DRIVER and VEHICLE documents (NATIONAL_ID, DRIVER_LICENSE, VEHICLE_REGISTRATION, VEHICLE_INSURANCE). status: PENDING→APPROVED/REJECTED/EXPIRED. expiresAt indexed.">
+  <rect x="1280" y="388" width="420" height="48" rx="0" fill="rgba(255,215,0,.05)" stroke="#FFD700" stroke-width="1.2"/>
+  <rect x="1280" y="388" width="4" height="48" fill="#FFD700" opacity=".7"/>
+  <rect x="1696" y="388" width="4" height="48" fill="#FFD700" opacity=".7"/>
+  <text x="1296" y="406" font-size="7.5" fill="#FFD700" font-weight="700">DS7 — DOCUMENTS</text>
+  <text x="1296" y="420" font-size="7" fill="#604000">documents table · ownerType: DRIVER | VEHICLE</text>
+  <text x="1296" y="430" font-size="7" fill="#402800">status: PENDING→APPROVED/REJECTED/EXPIRED</text>
+</g>
+<!-- DS8 Comms -->
+<g class="dnode" data-t="DS8 — Communication" data-d="Tables: messages, message_read_receipts, call_sessions, call_participants, call_event_logs. In-trip messaging and call records linked to Trip.">
+  <rect x="1280" y="444" width="420" height="48" rx="0" fill="rgba(74,158,255,.05)" stroke="#4A9EFF" stroke-width="1.2"/>
+  <rect x="1280" y="444" width="4" height="48" fill="#4A9EFF" opacity=".7"/>
+  <rect x="1696" y="444" width="4" height="48" fill="#4A9EFF" opacity=".7"/>
+  <text x="1296" y="462" font-size="7.5" fill="#4A9EFF" font-weight="700">DS8 — COMMUNICATION</text>
+  <text x="1296" y="476" font-size="7" fill="#2a4060">messages · message_read_receipts</text>
+  <text x="1296" y="486" font-size="7" fill="#1a3050">call_sessions · call_participants · call_event_logs</text>
+</g>
+<!-- DS9 Locations -->
+<g class="dnode" data-t="DS9 — Locations" data-d="Tables: locations, cities, saved_places, driver_locations. PostGIS geometry(Point/MultiPolygon, 4326). Gist indexes on geo fields. City coverage by polygon or radius.">
+  <rect x="1280" y="500" width="420" height="48" rx="0" fill="rgba(116,198,157,.05)" stroke="#74C69D" stroke-width="1.2"/>
+  <rect x="1280" y="500" width="4" height="48" fill="#74C69D" opacity=".7"/>
+  <rect x="1696" y="500" width="4" height="48" fill="#74C69D" opacity=".7"/>
+  <text x="1296" y="518" font-size="7.5" fill="#74C69D" font-weight="700">DS9 — LOCATIONS</text>
+  <text x="1296" y="532" font-size="7" fill="#1a4030">locations (PostGIS) · cities (MultiPolygon)</text>
+  <text x="1296" y="542" font-size="7" fill="#0a2820">saved_places · driver_locations · Gist indexes</text>
+</g>
+<!-- DS10 Reports -->
+<g class="dnode" data-t="DS10 — Reports" data-d="Tables: delivery_reports, delivery_report_attachments. Status flow: PENDING→IN_PROGRESS→RESOLVED/REJECTED/ESCALATED. Admin resolves ESCALATED reports.">
+  <rect x="1280" y="556" width="420" height="48" rx="0" fill="rgba(255,107,157,.05)" stroke="#FF6B9D" stroke-width="1.2"/>
+  <rect x="1280" y="556" width="4" height="48" fill="#FF6B9D" opacity=".7"/>
+  <rect x="1696" y="556" width="4" height="48" fill="#FF6B9D" opacity=".7"/>
+  <text x="1296" y="574" font-size="7.5" fill="#FF6B9D" font-weight="700">DS10 — REPORTS</text>
+  <text x="1296" y="588" font-size="7" fill="#602040">delivery_reports · delivery_report_attachments</text>
+  <text x="1296" y="598" font-size="7" fill="#401030">PENDING→IN_PROGRESS→RESOLVED/REJECTED/ESCALATED</text>
+</g>
+
+<!-- ═══════ DATA FLOWS ═══════ -->
+<!-- Actor → Process flows (solid, colored) -->
+<line x1="128" y1="103" x2="200" y2="103" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#a0)"/>
+<text x="162" y="97" text-anchor="middle" font-size="6.5" fill="#2a7860">register/login</text>
+<line x1="128" y1="122" x2="200" y2="225" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#a0)"/>
+<text x="154" y="178" font-size="6.5" fill="#1a5048">book ride</text>
+<line x1="128" y1="253" x2="200" y2="240" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#a2)"/>
+<text x="160" y="243" font-size="6.5" fill="#2a4868">accept trip</text>
+<line x1="128" y1="128" x2="200" y2="360" stroke="#FFB347" stroke-width="1.5" marker-end="url(#a3)"/>
+<text x="152" y="255" font-size="6.5" fill="#604020">place order</text>
+<line x1="128" y1="408" x2="200" y2="390" stroke="#FFB347" stroke-width="1.5" marker-end="url(#a3)"/>
+<text x="160" y="393" font-size="6.5" fill="#604020">accept/fulfill</text>
+<line x1="128" y1="568" x2="200" y2="500" stroke="#B48AE8" stroke-width="1.5" marker-end="url(#a4)"/>
+<text x="152" y="527" font-size="6.5" fill="#4a2870">onboard/book</text>
+<line x1="128" y1="718" x2="200" y2="520" stroke="#B48AE8" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="4,3"/>
+<text x="143" y="625" font-size="6.5" fill="#3a1860">monitor</text>
+<line x1="128" y1="876" x2="200" y2="760" stroke="#FFD700" stroke-width="1.5" marker-end="url(#a5)"/>
+<text x="150" y="810" font-size="6.5" fill="#604000">approve/verify</text>
+<line x1="128" y1="278" x2="200" y2="774" stroke="#FFD700" stroke-width="1" marker-end="url(#a5)" stroke-dasharray="4,3"/>
+<text x="180" y="525" font-size="6.5" fill="#3a4000">submit docs</text>
+<line x1="128" y1="290" x2="200" y2="890" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+
+<!-- Process → Process flows -->
+<line x1="348" y1="250" x2="420" y2="240" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)"/>
+<text x="383" y="234" text-anchor="middle" font-size="6.5" fill="#2a4060">in-trip comms</text>
+<line x1="348" y1="380" x2="420" y2="380" stroke="#74C69D" stroke-width="1" marker-end="url(#a6)"/>
+<text x="383" y="374" text-anchor="middle" font-size="6.5" fill="#1a4030">POI lookup</text>
+<line x1="348" y1="500" x2="420" y2="500" stroke="#FF6B9D" stroke-width="1" marker-end="url(#a3)"/>
+<text x="383" y="494" text-anchor="middle" font-size="6.5" fill="#602040">file report</text>
+<line x1="297" y1="280" x2="297" y2="602" stroke="#FFA500" stroke-width="1" marker-end="url(#a7)" stroke-dasharray="3,3"/>
+<text x="308" y="445" font-size="6.5" fill="#604000">trip done→credit pts</text>
+<line x1="348" y1="640" x2="420" y2="637" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+<line x1="348" y1="250" x2="420" y2="637" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,4" opacity=".5"/>
+<line x1="348" y1="400" x2="420" y2="637" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,4" opacity=".4"/>
+
+<!-- Map Locator → P9 (external read) -->
+<line x1="128" y1="1048" x2="420" y2="410" stroke="#74C69D" stroke-width="1.5" marker-end="url(#a6)" stroke-dasharray="6,3"/>
+<text x="250" y="750" font-size="6.5" fill="#1a4030">POI data (read-only, APPROVED)</text>
+
+<!-- Driver → P12 -->
+<line x1="128" y1="278" x2="420" y2="890" stroke="#4D9DE0" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
+<text x="400" y="610" font-size="6.5" fill="#2a4868">safety check</text>
+
+<!-- Process → Data Stores (dashed right) -->
+<line x1="348" y1="105" x2="1280" y2="76" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="5,3" opacity=".55"/>
+<text x="815" y="73" text-anchor="middle" font-size="6.5" fill="#1a3050">write user + session</text>
+<line x1="348" y1="245" x2="1280" y2="132" stroke="#00C9A7" stroke-width="1" marker-end="url(#a0)" stroke-dasharray="5,3" opacity=".55"/>
+<text x="815" y="133" text-anchor="middle" font-size="6.5" fill="#1a5048">write Trip / SharedRideRequest</text>
+<line x1="348" y1="252" x2="1280" y2="188" stroke="#4D9DE0" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="5,3" opacity=".45"/>
+<text x="815" y="192" text-anchor="middle" font-size="6.5" fill="#2a4060">write Driver / DriverLocation / Vehicle</text>
+<line x1="348" y1="380" x2="1280" y2="244" stroke="#FFB347" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="5,3" opacity=".55"/>
+<text x="815" y="248" text-anchor="middle" font-size="6.5" fill="#604020">write Delivery + Events</text>
+<line x1="348" y1="505" x2="1280" y2="300" stroke="#B48AE8" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="5,3" opacity=".55"/>
+<text x="815" y="304" text-anchor="middle" font-size="6.5" fill="#4a2870">write BusTrip / Booking / Delivery</text>
+<line x1="348" y1="645" x2="1280" y2="356" stroke="#FFA500" stroke-width="1" marker-end="url(#a7)" stroke-dasharray="5,3" opacity=".55"/>
+<text x="815" y="360" text-anchor="middle" font-size="6.5" fill="#604000">write RewardActivity / Wallet / Redemption</text>
+<line x1="348" y1="774" x2="1280" y2="412" stroke="#FFD700" stroke-width="1" marker-end="url(#a5)" stroke-dasharray="5,3" opacity=".55"/>
+<text x="815" y="416" text-anchor="middle" font-size="6.5" fill="#604000">write Document status</text>
+<line x1="560" y1="250" x2="1280" y2="468" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="5,3" opacity=".45"/>
+<text x="920" y="472" text-anchor="middle" font-size="6.5" fill="#2a4060">write Message / CallSession</text>
+<line x1="560" y1="380" x2="1280" y2="524" stroke="#74C69D" stroke-width="1" marker-end="url(#a6)" stroke-dasharray="5,3" opacity=".45"/>
+<text x="920" y="528" text-anchor="middle" font-size="6.5" fill="#1a4030">write Location / City / DriverLocation</text>
+<line x1="560" y1="510" x2="1280" y2="580" stroke="#FF6B9D" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="5,3" opacity=".45"/>
+<text x="920" y="584" text-anchor="middle" font-size="6.5" fill="#602040">write DeliveryReport / Attachments</text>
+<line x1="348" y1="895" x2="1280" y2="188" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="5,3" opacity=".35"/>
+<line x1="560" y1="895" x2="1280" y2="188" stroke="#4D9DE0" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="5,3" opacity=".35"/>
+
+<!-- P11 Notify → actors (return arrows) -->
+<line x1="420" y1="638" x2="128" y2="138" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,4" opacity=".35"/>
+<line x1="420" y1="642" x2="128" y2="280" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,4" opacity=".35"/>
+<text x="220" y="430" font-size="6.5" fill="#1a3050">push notifications</text>
 </svg>
 </div>
 </div>
-
-<!-- ========== PANEL 2: CLASS diagram (delivery entities refined) ========= -->
+<!-- ══════════════════════════════════════════════════════════════
+     PANEL 2 — CLASS DIAGRAM
+══════════════════════════════════════════════════════════════ -->
 <div class="panel" id="panel-class">
-<div class="legend"><span class="leg-title">Delivery class refinements</span></div>
+<div class="legend">
+  <span class="leg-title">Notation:</span>
+  <div class="leg-item"><div style="width:20px;height:2px;background:#00C9A7"></div>1:1 (extends)</div>
+  <div class="leg-item"><div style="width:20px;height:0;border-top:2px dashed #4A9EFF"></div>1:many</div>
+  <div class="leg-item"><div style="width:20px;height:0;border-top:2px dotted #B48AE8"></div>many:many (join)</div>
+  <div class="leg-item"><div class="leg-sq" style="background:rgba(0,201,167,.1);border:1px solid #00C9A7"></div>Core/Ride-Hailing</div>
+  <div class="leg-item"><div class="leg-sq" style="background:rgba(255,179,71,.1);border:1px solid #FFB347"></div>Delivery</div>
+  <div class="leg-item"><div class="leg-sq" style="background:rgba(180,138,232,.1);border:1px solid #B48AE8"></div>Bus</div>
+  <div class="leg-item"><div class="leg-sq" style="background:rgba(255,165,0,.1);border:1px solid #FFA500"></div>Rewards/Wallet</div>
+  <div class="leg-item"><div class="leg-sq" style="background:rgba(255,215,0,.1);border:1px solid #FFD700"></div>Documents</div>
+</div>
 <div class="diagram-scroll">
-<svg width="1500" height="900">
-<rect width="1500" height="900" fill="#0e1512" rx="14"/>
-<g class="dnode" data-t="Delivery (enhanced)" data-d="Now includes packageSize (SMALL, LARGE), distanceCategory (SHORT, LONG), pricingModel (INSTANT, QUOTE), handoffRequired: boolean, directSpecialVehicle: boolean.">
-  <rect x="80" y="70" width="320" height="240" rx="6" fill="rgba(255,179,71,.08)" stroke="#FFB347" stroke-width="2"/>
-  <text x="240" y="95" fill="#FFB347" font-weight="700" font-size="14">Delivery (root)</text>
-  <line x1="80" y1="100" x2="400" y2="100" stroke="#FFB347"/>
-  <text x="90" y="120" font-size="8" fill="#ccc">id, clientId, agentId, status</text>
-  <text x="90" y="140" font-size="8" fill="#FFB347">packageSize: SMALL | LARGE</text>
-  <text x="90" y="160" font-size="8" fill="#FFB347">distanceCategory: SHORT | LONG  (based on city threshold)</text>
-  <text x="90" y="180" font-size="8" fill="#FFB347">pricingModel: INSTANT | QUOTE</text>
-  <text x="90" y="200" font-size="8" fill="#FFB347">handoffRequired: boolean</text>
-  <text x="90" y="220" font-size="8" fill="#FFB347">directSpecialVehicle: boolean</text>
-  <text x="90" y="240" font-size="8" fill="#ccc">pickupMethod: DOOR | DROP_OFF</text>
-  <text x="90" y="260" font-size="8" fill="#ccc">scanCode: String (QR at door)</text>
-  <text x="90" y="280" font-size="8" fill="#ccc">quotationId? (if QUOTE)</text>
+<svg width="2100" height="1820" viewBox="0 0 2100 1820">
+<defs>
+  <marker id="ca" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00C9A7" opacity=".65"/></marker>
+  <marker id="cb" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4A9EFF" opacity=".65"/></marker>
+  <marker id="cc" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4D9DE0" opacity=".65"/></marker>
+  <marker id="cd" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FFB347" opacity=".65"/></marker>
+  <marker id="ce" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#B48AE8" opacity=".65"/></marker>
+  <marker id="cf" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FFA500" opacity=".65"/></marker>
+  <marker id="cg" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FFD700" opacity=".65"/></marker>
+  <marker id="ch" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#74C69D" opacity=".65"/></marker>
+</defs>
+<rect width="2100" height="1820" rx="14" fill="#0e1512" stroke="rgba(0,201,167,.05)"/>
+
+<!-- ─── CLASS BOX HELPER (drawn inline for each model) ─── -->
+
+<!-- USER (center, top) -->
+<g class="dnode" data-t="User" data-d="Central identity model. Every actor is a User. role enum determines which extension model applies. Tracks status, auth, language, soft-delete." style="cursor:pointer">
+  <rect x="830" y="30" width="210" height="235" rx="6" fill="rgba(0,201,167,.07)" stroke="#00C9A7" stroke-width="1.5"/>
+  <rect x="830" y="30" width="210" height="26" rx="6" fill="rgba(0,201,167,.22)"/>
+  <rect x="830" y="44" width="210" height="12" fill="rgba(0,201,167,.22)"/>
+  <text x="935" y="48" text-anchor="middle" font-size="10.5" fill="#00C9A7" font-weight="700">User</text>
+  <line x1="830" y1="56" x2="1040" y2="56" stroke="#00C9A7" stroke-width="1" opacity=".35"/>
+  <text x="842" y="71" font-size="8" fill="#7ab8a8">id: UUID PK</text>
+  <text x="842" y="84" font-size="8" fill="#5a8878">firstName, lastName: String</text>
+  <text x="842" y="97" font-size="8" fill="#5a8878">dateOfBirth: Date</text>
+  <text x="842" y="110" font-size="8" fill="#5a8878">email?: String @unique</text>
+  <text x="842" y="123" font-size="8" fill="#5a8878">phone?: String @unique</text>
+  <text x="842" y="136" font-size="8" fill="#5a8878">password?: String</text>
+  <text x="842" y="149" font-size="8" fill="#5a8878">role: UserRole</text>
+  <text x="842" y="162" font-size="8" fill="#5a8878">status: UserStatus</text>
+  <text x="842" y="175" font-size="8" fill="#5a8878">isVerified: Boolean</text>
+  <text x="842" y="188" font-size="8" fill="#5a8878">language: Language?</text>
+  <text x="842" y="201" font-size="8" fill="#5a8878">notificationsEnabled: Boolean</text>
+  <line x1="830" y1="210" x2="1040" y2="210" stroke="#00C9A7" stroke-width="1" opacity=".3"/>
+  <text x="842" y="222" font-size="8" fill="#3a7868">+getExtensionModel()</text>
+  <text x="842" y="235" font-size="8" fill="#3a7868">+hasRole(r): Boolean</text>
+  <text x="842" y="248" font-size="8" fill="#3a7868">+softDelete()</text>
+  <text x="842" y="257" font-size="7" fill="#1a5040">deletedAt?: DateTime</text>
 </g>
-<g class="dnode" data-t="Quotation" data-d="For large packages long distance. status: REQUESTED, PRICED, ACCEPTED, EXPIRED. includes adminEstimate, finalPrice, validUntil.">
-  <rect x="500" y="70" width="280" height="180" rx="6" fill="rgba(184,107,47,.08)" stroke="#b86b2f" stroke-width="2"/>
-  <text x="640" y="95" fill="#b86b2f" font-weight="700" font-size="14">Quotation</text>
-  <text x="510" y="120" font-size="8" fill="#ccc">id, deliveryId, status</text>
-  <text x="510" y="140" font-size="8" fill="#b86b2f">requestedBy: clientId</text>
-  <text x="510" y="160" font-size="8" fill="#b86b2f">estimatedPrice, finalPrice, currency</text>
-  <text x="510" y="180" font-size="8" fill="#b86b2f">validUntil, adminId (who priced)</text>
-  <text x="510" y="200" font-size="8" fill="#b86b2f">specialVehicleType: REMOVAL_TRUCK | LIVESTOCK</text>
-  <text x="510" y="220" font-size="8" fill="#ccc">notes</text>
+
+<!-- CLIENT -->
+<g class="dnode" data-t="Client" data-d="Passenger extension of User. rewardPoints, referralCode (unique), referredBy for attribution chain. Linked to Wallet. Tracks totalTrips and totalSpent for milestones.">
+  <rect x="260" y="30" width="200" height="200" rx="6" fill="rgba(0,201,167,.06)" stroke="#00C9A7" stroke-width="1.2"/>
+  <rect x="260" y="30" width="200" height="24" rx="6" fill="rgba(0,201,167,.18)"/>
+  <rect x="260" y="42" width="200" height="12" fill="rgba(0,201,167,.18)"/>
+  <text x="360" y="47" text-anchor="middle" font-size="10.5" fill="#00C9A7" font-weight="700">Client</text>
+  <line x1="260" y1="54" x2="460" y2="54" stroke="#00C9A7" stroke-width="1" opacity=".35"/>
+  <text x="272" y="69" font-size="8" fill="#7ab8a8">userId: UUID PK FK→User</text>
+  <text x="272" y="82" font-size="8" fill="#5a8878">rewardPoints: Int = 0</text>
+  <text x="272" y="95" font-size="8" fill="#5a8878">referralCode?: String @unique</text>
+  <text x="272" y="108" font-size="8" fill="#5a8878">referredBy?: String</text>
+  <text x="272" y="121" font-size="8" fill="#5a8878">totalTrips: Int = 0</text>
+  <text x="272" y="134" font-size="8" fill="#5a8878">totalSpent: Decimal</text>
+  <text x="272" y="147" font-size="8" fill="#5a8878">preferredPaymentCurrency?</text>
+  <line x1="260" y1="158" x2="460" y2="158" stroke="#00C9A7" stroke-width="1" opacity=".3"/>
+  <text x="272" y="171" font-size="8" fill="#3a7868">+earnPoints(delta: Int)</text>
+  <text x="272" y="184" font-size="8" fill="#3a7868">+redeemPoints(amount)</text>
+  <text x="272" y="197" font-size="8" fill="#3a7868">+getReferralBonus()</text>
+  <text x="272" y="222" font-size="7" fill="#1a5040">→ sharedRideRequests[]</text>
 </g>
-<g class="dnode" data-t="HandoffRecord" data-d="When driver → agent for small long-distance. Tracks fromAgent/driver, toAgent, scanProof, location.">
-  <rect x="900" y="70" width="280" height="140" rx="6" fill="rgba(74,158,255,.08)" stroke="#4A9EFF" stroke-width="2"/>
-  <text x="1040" y="95" fill="#4A9EFF" font-weight="700" font-size="14">HandoffRecord</text>
-  <text x="910" y="120" font-size="8" fill="#ccc">id, deliveryId</text>
-  <text x="910" y="140" font-size="8" fill="#4A9EFF">fromDriverId?, fromAgentId?</text>
-  <text x="910" y="160" font-size="8" fill="#4A9EFF">toAgentId, handoffLocationId</text>
-  <text x="910" y="180" font-size="8" fill="#4A9EFF">scanTimestamp, scanCodeVerified</text>
+
+<!-- DRIVER -->
+<g class="dnode" data-t="Driver" data-d="Driver extension. workStatus (OFFLINE/ONLINE/SUSPENDED). homeLocationId enables BACK_TO_HOME priority. preference: NORMAL/DISCOUNT/BACK_TO_HOME — mutually exclusive. Safety checks per session.">
+  <rect x="260" y="270" width="200" height="230" rx="6" fill="rgba(77,157,224,.07)" stroke="#4D9DE0" stroke-width="1.2"/>
+  <rect x="260" y="270" width="200" height="24" rx="6" fill="rgba(77,157,224,.2)"/>
+  <rect x="260" y="282" width="200" height="12" fill="rgba(77,157,224,.2)"/>
+  <text x="360" y="287" text-anchor="middle" font-size="10.5" fill="#4D9DE0" font-weight="700">Driver</text>
+  <line x1="260" y1="294" x2="460" y2="294" stroke="#4D9DE0" stroke-width="1" opacity=".35"/>
+  <text x="272" y="309" font-size="8" fill="#7ab0d8">userId: UUID PK FK→User</text>
+  <text x="272" y="322" font-size="8" fill="#5a8898">nationalId: String @unique</text>
+  <text x="272" y="335" font-size="8" fill="#5a8898">currentCityId?: UUID FK→City</text>
+  <text x="272" y="348" font-size="8" fill="#5a8898">homeLocationId?: UUID FK→Loc</text>
+  <text x="272" y="361" font-size="8" fill="#5a8898">workStatus: DriverStatus</text>
+  <text x="272" y="374" font-size="8" fill="#5a8898">isOnTrip: Boolean</text>
+  <text x="272" y="387" font-size="8" fill="#5a8898">preference: DriverPreference</text>
+  <text x="272" y="400" font-size="8" fill="#5a8898">activeServiceType?: ServiceType</text>
+  <text x="272" y="413" font-size="8" fill="#5a8898">vehicleId?: UUID FK→Vehicle</text>
+  <line x1="260" y1="423" x2="460" y2="423" stroke="#4D9DE0" stroke-width="1" opacity=".3"/>
+  <text x="272" y="436" font-size="8" fill="#3a7898">+goOnline(cityId)</text>
+  <text x="272" y="449" font-size="8" fill="#3a7898">+checkCapacity(): bool</text>
+  <text x="272" y="462" font-size="8" fill="#3a7898">+setPriority(pref)</text>
+  <text x="272" y="475" font-size="8" fill="#3a7898">+completeSafetyCheck()</text>
+  <text x="272" y="492" font-size="7" fill="#1a4870">→ trips[] · documents[] · safetyChecks[]</text>
 </g>
-<!-- relationships: Delivery -> Quotation (0..1), Delivery -> HandoffRecord (0..1) -->
-<line x1="400" y1="190" x2="500" y2="130" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a2)" stroke-dasharray="5,3"/>
-<text x="420" y="130" fill="#b86b2f" font-size="7">0..1</text>
-<line x1="400" y1="220" x2="900" y2="120" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#a1)" stroke-dasharray="5,3"/>
-<text x="600" y="160" fill="#4A9EFF" font-size="7">handoff</text>
+
+<!-- VEHICLE -->
+<g class="dnode" data-t="Vehicle" data-d="Registered vehicle. Belongs to User (owner). supportedTypes: SHARED/PRIVATE/DELIVERY. Insurance expiry tracked. safetyFlag removed — use DriverSafetyCheck per session.">
+  <rect x="30" y="270" width="200" height="190" rx="6" fill="rgba(77,157,224,.05)" stroke="#4D9DE0" stroke-width="1"/>
+  <rect x="30" y="270" width="200" height="24" rx="6" fill="rgba(77,157,224,.18)"/>
+  <rect x="30" y="282" width="200" height="12" fill="rgba(77,157,224,.18)"/>
+  <text x="130" y="287" text-anchor="middle" font-size="10.5" fill="#4D9DE0" font-weight="700">Vehicle</text>
+  <line x1="30" y1="294" x2="230" y2="294" stroke="#4D9DE0" stroke-width="1" opacity=".35"/>
+  <text x="42" y="309" font-size="8" fill="#7ab0d8">id: UUID PK</text>
+  <text x="42" y="322" font-size="8" fill="#5a8898">plateNumber: String @unique</text>
+  <text x="42" y="335" font-size="8" fill="#5a8898">brand, model, year, color</text>
+  <text x="42" y="348" font-size="8" fill="#5a8898">numberOfSeats?: SmallInt</text>
+  <text x="42" y="361" font-size="8" fill="#5a8898">insuranceExpiresAt: DateTime</text>
+  <text x="42" y="374" font-size="8" fill="#5a8898">supportedTypes: ServiceType[]</text>
+  <text x="42" y="387" font-size="8" fill="#5a8898">userId: UUID FK→User</text>
+  <line x1="30" y1="397" x2="230" y2="397" stroke="#4D9DE0" stroke-width="1" opacity=".3"/>
+  <text x="42" y="410" font-size="8" fill="#3a7898">+isInsuranceValid(): bool</text>
+  <text x="42" y="423" font-size="8" fill="#3a7898">+getSafetyChecks()</text>
+  <text x="42" y="436" font-size="8" fill="#3a7898">+getActiveTrip()</text>
+  <text x="42" y="450" font-size="7" fill="#1a4870">→ drivers[] · documents[]</text>
+</g>
+
+<!-- DRIVER SAFETY CHECK -->
+<g class="dnode" data-t="DriverSafetyCheck" data-d="Per-session (not per-vehicle) safety check log. Front: fuel, wipers, mirrors, lights, brakes, tires. Rear: backLights, plate, turnSignal, exhaust. All must be true to proceed.">
+  <rect x="30" y="500" width="200" height="195" rx="6" fill="rgba(77,157,224,.04)" stroke="#4D9DE0" stroke-width="1" stroke-dasharray="5,3"/>
+  <rect x="30" y="500" width="200" height="24" rx="6" fill="rgba(77,157,224,.16)"/>
+  <rect x="30" y="512" width="200" height="12" fill="rgba(77,157,224,.16)"/>
+  <text x="130" y="517" text-anchor="middle" font-size="9.5" fill="#4D9DE0" font-weight="700">DriverSafetyCheck</text>
+  <line x1="30" y1="524" x2="230" y2="524" stroke="#4D9DE0" stroke-width="1" opacity=".3"/>
+  <text x="42" y="539" font-size="8" fill="#7ab0d8">id: UUID PK</text>
+  <text x="42" y="552" font-size="8" fill="#5a8898">driverId: UUID FK→Driver</text>
+  <text x="42" y="565" font-size="8" fill="#5a8898">vehicleId: UUID FK→Vehicle</text>
+  <text x="42" y="578" font-size="8" fill="#5a8898">fuelLevel, wipersOk, mirrors</text>
+  <text x="42" y="591" font-size="8" fill="#5a8898">lightsCheck, checkBrakes, tires</text>
+  <text x="42" y="604" font-size="8" fill="#5a8898">backLights, platteOk, turnSignal</text>
+  <text x="42" y="617" font-size="8" fill="#5a8898">exhaust: Boolean (all)</text>
+  <text x="42" y="630" font-size="8" fill="#5a8898">serviceType: ServiceType</text>
+  <text x="42" y="643" font-size="8" fill="#5a8898">completedAt: DateTime</text>
+  <line x1="30" y1="653" x2="230" y2="653" stroke="#4D9DE0" stroke-width="1" opacity=".3"/>
+  <text x="42" y="666" font-size="8" fill="#3a7898">+isComplete(): bool</text>
+  <text x="42" y="679" font-size="8" fill="#3a7898">+getFailedChecks(): String[]</text>
+</g>
+
+<!-- TRIP -->
+<g class="dnode" data-t="Trip" data-d="Core ride record. TripType: PRIVATE/SHARED/DELIVERY. structureType: SINGLE_DROP/MULTI_STOP. isDiscountPriority and isBackToHome flags. isAutoAccept skips manual driver accept.">
+  <rect x="510" y="30" width="200" height="240" rx="6" fill="rgba(0,201,167,.06)" stroke="#00C9A7" stroke-width="1.2"/>
+  <rect x="510" y="30" width="200" height="24" rx="6" fill="rgba(0,201,167,.18)"/>
+  <rect x="510" y="42" width="200" height="12" fill="rgba(0,201,167,.18)"/>
+  <text x="610" y="47" text-anchor="middle" font-size="10.5" fill="#00C9A7" font-weight="700">Trip</text>
+  <line x1="510" y1="54" x2="710" y2="54" stroke="#00C9A7" stroke-width="1" opacity=".35"/>
+  <text x="522" y="69" font-size="8" fill="#7ab8a8">id: UUID PK</text>
+  <text x="522" y="82" font-size="8" fill="#5a8878">driverId: UUID FK→Driver</text>
+  <text x="522" y="95" font-size="8" fill="#5a8878">vehicleId: UUID FK→Vehicle</text>
+  <text x="522" y="108" font-size="8" fill="#5a8878">tripType: TripType</text>
+  <text x="522" y="121" font-size="8" fill="#5a8878">structureType: TripStructureType</text>
+  <text x="522" y="134" font-size="8" fill="#5a8878">status: TripStatus</text>
+  <text x="522" y="147" font-size="8" fill="#5a8878">remainingSeats: Int</text>
+  <text x="522" y="160" font-size="8" fill="#5a8878">seatPrice: Decimal</text>
+  <text x="522" y="173" font-size="8" fill="#5a8878">isDiscountPriority: Boolean</text>
+  <text x="522" y="186" font-size="8" fill="#5a8878">isBackToHome: Boolean</text>
+  <text x="522" y="199" font-size="8" fill="#5a8878">isAutoAccept: Boolean</text>
+  <text x="522" y="212" font-size="8" fill="#5a8878">cityId?: UUID FK→City</text>
+  <line x1="510" y1="222" x2="710" y2="222" stroke="#00C9A7" stroke-width="1" opacity=".3"/>
+  <text x="522" y="235" font-size="8" fill="#3a7868">+start() / complete()</text>
+  <text x="522" y="248" font-size="8" fill="#3a7868">+allocateSeat(n): bool</text>
+  <text x="522" y="261" font-size="8" fill="#3a7868">+applyDiscount(type)</text>
+</g>
+
+<!-- SHARED RIDE REQUEST -->
+<g class="dnode" data-t="SharedRideRequest" data-d="Client booking against a Trip. Stores seat count, pickup/dropoff as JSON (Map Locator POI resolved coords). Status: PENDING→ACCEPTED/REJECTED/CANCELLED/COMPLETED. isPaid tracks payment.">
+  <rect x="510" y="310" width="200" height="200" rx="6" fill="rgba(0,201,167,.05)" stroke="#00C9A7" stroke-width="1"/>
+  <rect x="510" y="310" width="200" height="24" rx="6" fill="rgba(0,201,167,.15)"/>
+  <rect x="510" y="322" width="200" height="12" fill="rgba(0,201,167,.15)"/>
+  <text x="610" y="327" text-anchor="middle" font-size="9.5" fill="#00C9A7" font-weight="700">SharedRideRequest</text>
+  <line x1="510" y1="334" x2="710" y2="334" stroke="#00C9A7" stroke-width="1" opacity=".35"/>
+  <text x="522" y="349" font-size="8" fill="#7ab8a8">id: UUID PK</text>
+  <text x="522" y="362" font-size="8" fill="#5a8878">tripId: UUID FK→Trip</text>
+  <text x="522" y="375" font-size="8" fill="#5a8878">clientId: UUID FK→Client</text>
+  <text x="522" y="388" font-size="8" fill="#5a8878">status: SharedRideReqStatus</text>
+  <text x="522" y="401" font-size="8" fill="#5a8878">numberOfSeats: SmallInt</text>
+  <text x="522" y="414" font-size="8" fill="#5a8878">pickupLocation: Json</text>
+  <text x="522" y="427" font-size="8" fill="#5a8878">dropoffLocation: Json</text>
+  <text x="522" y="440" font-size="8" fill="#5a8878">totalPrice: Decimal</text>
+  <text x="522" y="453" font-size="8" fill="#5a8878">isPaid: Boolean</text>
+  <line x1="510" y1="463" x2="710" y2="463" stroke="#00C9A7" stroke-width="1" opacity=".3"/>
+  <text x="522" y="476" font-size="8" fill="#3a7868">+accept() / reject()</text>
+  <text x="522" y="489" font-size="8" fill="#3a7868">+cancel() / complete()</text>
+  <text x="522" y="500" font-size="7" fill="#1a5040">@@unique [tripId, reviewerId] on TripRating</text>
+</g>
+
+<!-- DELIVERY -->
+<g class="dnode" data-t="Delivery" data-d="Parcel order created by Client. agentId is NULLABLE at creation (PENDING). Assigned post-broadcast. Full event-sourcing via DeliveryEvent. Requires DeliveryPhoto(PROOF) + DeliverySignature on DELIVERED.">
+  <rect x="830" y="310" width="200" height="220" rx="6" fill="rgba(255,179,71,.08)" stroke="#FFB347" stroke-width="1.2"/>
+  <rect x="830" y="310" width="200" height="24" rx="6" fill="rgba(255,179,71,.2)"/>
+  <rect x="830" y="322" width="200" height="12" fill="rgba(255,179,71,.2)"/>
+  <text x="930" y="327" text-anchor="middle" font-size="10.5" fill="#FFB347" font-weight="700">Delivery</text>
+  <line x1="830" y1="334" x2="1030" y2="334" stroke="#FFB347" stroke-width="1" opacity=".35"/>
+  <text x="842" y="349" font-size="8" fill="#d8b070">id: UUID PK</text>
+  <text x="842" y="362" font-size="8" fill="#9a7848">agentId?: UUID FK→Agent (null=PENDING)</text>
+  <text x="842" y="375" font-size="8" fill="#9a7848">clientId?: UUID FK→User</text>
+  <text x="842" y="388" font-size="8" fill="#9a7848">status: DeliveryStatus</text>
+  <text x="842" y="401" font-size="8" fill="#9a7848">priority: DeliveryPriority</text>
+  <text x="842" y="414" font-size="8" fill="#9a7848">pickupLocationId: UUID</text>
+  <text x="842" y="427" font-size="8" fill="#9a7848">deliveryLocationId: UUID</text>
+  <text x="842" y="440" font-size="8" fill="#9a7848">price, agentCommission: Decimal</text>
+  <text x="842" y="453" font-size="8" fill="#9a7848">paymentStatus: PaymentStatus</text>
+  <text x="842" y="466" font-size="8" fill="#9a7848">trackingNumber?: String @unique</text>
+  <line x1="830" y1="476" x2="1030" y2="476" stroke="#FFB347" stroke-width="1" opacity=".3"/>
+  <text x="842" y="489" font-size="8" fill="#7a5828">+assign(agentId)</text>
+  <text x="842" y="502" font-size="8" fill="#7a5828">+pickup() / deliver()</text>
+  <text x="842" y="515" font-size="8" fill="#7a5828">+addEvent(type, location)</text>
+  <text x="842" y="524" font-size="7" fill="#5a3818">→ photos[] · signatures · events[] · reports[]</text>
+</g>
+
+<!-- AGENT -->
+<g class="dnode" data-t="Agent" data-d="Delivery fulfillment operator extending User. Verified via shared VerificationStatus enum (PENDING/APPROVED/REJECTED/SUSPENDED). isActive gates broadcast eligibility. Tracks delivery metrics and rating.">
+  <rect x="1070" y="310" width="200" height="215" rx="6" fill="rgba(255,179,71,.06)" stroke="#FFB347" stroke-width="1.2"/>
+  <rect x="1070" y="310" width="200" height="24" rx="6" fill="rgba(255,179,71,.18)"/>
+  <rect x="1070" y="322" width="200" height="12" fill="rgba(255,179,71,.18)"/>
+  <text x="1170" y="327" text-anchor="middle" font-size="10.5" fill="#FFB347" font-weight="700">Agent</text>
+  <line x1="1070" y1="334" x2="1270" y2="334" stroke="#FFB347" stroke-width="1" opacity=".35"/>
+  <text x="1082" y="349" font-size="8" fill="#d8b070">userId: UUID PK FK→User</text>
+  <text x="1082" y="362" font-size="8" fill="#9a7848">businessName?, tradeName?</text>
+  <text x="1082" y="375" font-size="8" fill="#9a7848">cityId?: UUID FK→City</text>
+  <text x="1082" y="388" font-size="8" fill="#9a7848">verificationStatus: VerifStatus</text>
+  <text x="1082" y="401" font-size="8" fill="#9a7848">verifiedAt?, verifiedById?</text>
+  <text x="1082" y="414" font-size="8" fill="#9a7848">isActive: Boolean</text>
+  <text x="1082" y="427" font-size="8" fill="#9a7848">totalDeliveries: Int</text>
+  <text x="1082" y="440" font-size="8" fill="#9a7848">completedDeliveries: Int</text>
+  <text x="1082" y="453" font-size="8" fill="#9a7848">rating?: Decimal(3,2)</text>
+  <line x1="1070" y1="463" x2="1270" y2="463" stroke="#FFB347" stroke-width="1" opacity=".3"/>
+  <text x="1082" y="476" font-size="8" fill="#7a5828">+acceptDelivery(id)</text>
+  <text x="1082" y="489" font-size="8" fill="#7a5828">+confirmPickup()</text>
+  <text x="1082" y="502" font-size="8" fill="#7a5828">+confirmDelivery(photo, sig)</text>
+  <text x="1082" y="515" font-size="8" fill="#7a5828">+rejectDelivery(id)</text>
+</g>
+
+<!-- DOCUMENT -->
+<g class="dnode" data-t="Document" data-d="Driver and vehicle documents. ownerType: DRIVER|VEHICLE. type: NATIONAL_ID/DRIVER_LICENSE/VEHICLE_REGISTRATION/VEHICLE_INSURANCE/OTHER. Expired docs (expiresAt past) block workStatus=ONLINE.">
+  <rect x="30" y="730" width="200" height="195" rx="6" fill="rgba(255,215,0,.06)" stroke="#FFD700" stroke-width="1.2"/>
+  <rect x="30" y="730" width="200" height="24" rx="6" fill="rgba(255,215,0,.18)"/>
+  <rect x="30" y="742" width="200" height="12" fill="rgba(255,215,0,.18)"/>
+  <text x="130" y="747" text-anchor="middle" font-size="10.5" fill="#FFD700" font-weight="700">Document</text>
+  <line x1="30" y1="754" x2="230" y2="754" stroke="#FFD700" stroke-width="1" opacity=".35"/>
+  <text x="42" y="769" font-size="8" fill="#d8c870">id: UUID PK</text>
+  <text x="42" y="782" font-size="8" fill="#9a8848">ownerType: DocumentOwnerType</text>
+  <text x="42" y="795" font-size="8" fill="#9a8848">driverId?: UUID FK→Driver</text>
+  <text x="42" y="808" font-size="8" fill="#9a8848">vehicleId?: UUID FK→Vehicle</text>
+  <text x="42" y="821" font-size="8" fill="#9a8848">type: DocumentType</text>
+  <text x="42" y="834" font-size="8" fill="#9a8848">status: DocumentStatus</text>
+  <text x="42" y="847" font-size="8" fill="#9a8848">expiresAt?: DateTime</text>
+  <text x="42" y="860" font-size="8" fill="#9a8848">verifiedById?: UUID FK→User</text>
+  <text x="42" y="873" font-size="8" fill="#9a8848">rejectionReason?: String</text>
+  <line x1="30" y1="883" x2="230" y2="883" stroke="#FFD700" stroke-width="1" opacity=".3"/>
+  <text x="42" y="896" font-size="8" fill="#7a7828">+isExpired(): Boolean</text>
+  <text x="42" y="909" font-size="8" fill="#7a7828">+approve(adminId)</text>
+  <text x="42" y="922" font-size="8" fill="#7a7828">+reject(reason)</text>
+</g>
+
+<!-- REWARD ACTIVITY -->
+<g class="dnode" data-t="RewardActivity" data-d="Records every reward point event. eventType: TRIP_COMPLETED/REFERRAL_SIGNUP/REFERRAL_TRIP_COMPLETED/MILESTONE_REACHED/POINTS_REDEEMED. pointsDelta can be negative on redemption.">
+  <rect x="270" y="560" width="195" height="165" rx="6" fill="rgba(255,165,0,.08)" stroke="#FFA500" stroke-width="1.2"/>
+  <rect x="270" y="560" width="195" height="24" rx="6" fill="rgba(255,165,0,.2)"/>
+  <rect x="270" y="572" width="195" height="12" fill="rgba(255,165,0,.2)"/>
+  <text x="367" y="577" text-anchor="middle" font-size="9.5" fill="#FFA500" font-weight="700">RewardActivity</text>
+  <line x1="270" y1="584" x2="465" y2="584" stroke="#FFA500" stroke-width="1" opacity=".35"/>
+  <text x="282" y="599" font-size="8" fill="#d89848">id: UUID PK</text>
+  <text x="282" y="612" font-size="8" fill="#9a7028">clientId: UUID FK→Client</text>
+  <text x="282" y="625" font-size="8" fill="#9a7028">eventType: RewardEventType</text>
+  <text x="282" y="638" font-size="8" fill="#9a7028">pointsDelta: Int</text>
+  <text x="282" y="651" font-size="8" fill="#9a7028">description?: String</text>
+  <text x="282" y="664" font-size="8" fill="#9a7028">metadata?: Json</text>
+  <text x="282" y="677" font-size="8" fill="#9a7028">createdAt: DateTime</text>
+  <line x1="270" y1="687" x2="465" y2="687" stroke="#FFA500" stroke-width="1" opacity=".3"/>
+  <text x="282" y="700" font-size="8" fill="#7a6018">+getPointsForPeriod(from,to)</text>
+  <text x="282" y="713" font-size="8" fill="#7a6018">+describe(): String</text>
+</g>
+
+<!-- REWARD REDEMPTION -->
+<g class="dnode" data-t="RewardRedemption" data-d="Records each point redemption event. redemptionType: TRIP_DISCOUNT or WALLET_CREDIT. referenceId links to the trip or wallet transaction. monetaryValue stores the cash equivalent redeemed.">
+  <rect x="270" y="750" width="195" height="155" rx="6" fill="rgba(255,165,0,.06)" stroke="#FFA500" stroke-width="1"/>
+  <rect x="270" y="750" width="195" height="24" rx="6" fill="rgba(255,165,0,.17)"/>
+  <rect x="270" y="762" width="195" height="12" fill="rgba(255,165,0,.17)"/>
+  <text x="367" y="767" text-anchor="middle" font-size="9.5" fill="#FFA500" font-weight="700">RewardRedemption</text>
+  <line x1="270" y1="774" x2="465" y2="774" stroke="#FFA500" stroke-width="1" opacity=".35"/>
+  <text x="282" y="789" font-size="8" fill="#d89848">id: UUID PK</text>
+  <text x="282" y="802" font-size="8" fill="#9a7028">clientId: UUID FK→Client</text>
+  <text x="282" y="815" font-size="8" fill="#9a7028">pointsRedeemed: Int</text>
+  <text x="282" y="828" font-size="8" fill="#9a7028">monetaryValue: Decimal</text>
+  <text x="282" y="841" font-size="8" fill="#9a7028">redemptionType: RedemptionType</text>
+  <text x="282" y="854" font-size="8" fill="#9a7028">referenceId?: UUID</text>
+  <text x="282" y="867" font-size="8" fill="#9a7028">redeemedAt: DateTime</text>
+  <line x1="270" y1="877" x2="465" y2="877" stroke="#FFA500" stroke-width="1" opacity=".3"/>
+  <text x="282" y="890" font-size="8" fill="#7a6018">+getMonetaryValue(): Decimal</text>
+</g>
+
+<!-- WALLET -->
+<g class="dnode" data-t="Wallet" data-d="One wallet per user (unique userId). balance: Decimal(12,2). Quick Transfer requires password confirmation. Reward-to-wallet conversion credits balance. All changes logged in WalletTransaction with balanceAfter.">
+  <rect x="500" y="560" width="195" height="175" rx="6" fill="rgba(255,165,0,.07)" stroke="#FFA500" stroke-width="1.2"/>
+  <rect x="500" y="560" width="195" height="24" rx="6" fill="rgba(255,165,0,.18)"/>
+  <rect x="500" y="572" width="195" height="12" fill="rgba(255,165,0,.18)"/>
+  <text x="597" y="577" text-anchor="middle" font-size="10.5" fill="#FFA500" font-weight="700">Wallet</text>
+  <line x1="500" y1="584" x2="695" y2="584" stroke="#FFA500" stroke-width="1" opacity=".35"/>
+  <text x="512" y="599" font-size="8" fill="#d89848">id: UUID PK</text>
+  <text x="512" y="612" font-size="8" fill="#9a7028">userId: UUID @unique FK→User</text>
+  <text x="512" y="625" font-size="8" fill="#9a7028">balance: Decimal(12,2) = 0</text>
+  <text x="512" y="638" font-size="8" fill="#9a7028">currency: String = "SAR"</text>
+  <line x1="500" y1="648" x2="695" y2="648" stroke="#FFA500" stroke-width="1" opacity=".3"/>
+  <text x="512" y="661" font-size="8" fill="#7a6018">+credit(amount, type)</text>
+  <text x="512" y="674" font-size="8" fill="#7a6018">+debit(amount, type)</text>
+  <text x="512" y="687" font-size="8" fill="#7a6018">+transfer(to, amount, pwd)</text>
+  <text x="512" y="700" font-size="8" fill="#7a6018">+convertRewards(points)</text>
+  <text x="512" y="713" font-size="8" fill="#7a6018">+getBalance(): Decimal</text>
+  <text x="512" y="726" font-size="7" fill="#5a4010">→ transactions: WalletTransaction[]</text>
+</g>
+
+<!-- WALLET TRANSACTION -->
+<g class="dnode" data-t="WalletTransaction" data-d="Immutable ledger entry. type: CREDIT/DEBIT/TRANSFER_IN/TRANSFER_OUT/REWARD_CONVERSION/TRIP_PAYMENT/REFUND. balanceAfter provides snapshot for reconciliation.">
+  <rect x="500" y="760" width="195" height="155" rx="6" fill="rgba(255,165,0,.05)" stroke="#FFA500" stroke-width="1"/>
+  <rect x="500" y="760" width="195" height="24" rx="6" fill="rgba(255,165,0,.15)"/>
+  <rect x="500" y="772" width="195" height="12" fill="rgba(255,165,0,.15)"/>
+  <text x="597" y="777" text-anchor="middle" font-size="9.5" fill="#FFA500" font-weight="700">WalletTransaction</text>
+  <line x1="500" y1="784" x2="695" y2="784" stroke="#FFA500" stroke-width="1" opacity=".35"/>
+  <text x="512" y="799" font-size="8" fill="#d89848">id: UUID PK</text>
+  <text x="512" y="812" font-size="8" fill="#9a7028">walletId: UUID FK→Wallet</text>
+  <text x="512" y="825" font-size="8" fill="#9a7028">amount: Decimal(12,2)</text>
+  <text x="512" y="838" font-size="8" fill="#9a7028">type: WalletTxType</text>
+  <text x="512" y="851" font-size="8" fill="#9a7028">referenceId?: UUID</text>
+  <text x="512" y="864" font-size="8" fill="#9a7028">balanceAfter: Decimal(12,2)</text>
+  <text x="512" y="877" font-size="8" fill="#9a7028">description?: String</text>
+  <line x1="500" y1="887" x2="695" y2="887" stroke="#FFA500" stroke-width="1" opacity=".3"/>
+  <text x="512" y="900" font-size="8" fill="#7a6018">+getDescription(): String</text>
+</g>
+
+<!-- BUS STATION -->
+<g class="dnode" data-t="BusStation" data-d="Physical station. stationType: MAIN_BUS_TERMINAL/MINI_BUS_TERMINAL/BRANCH_STOP. Location linked optionally (PostGIS). Map Locator POI enrichment at render time (read-only). Multi-employee/manager via join tables.">
+  <rect x="830" y="580" width="200" height="200" rx="6" fill="rgba(180,138,232,.08)" stroke="#B48AE8" stroke-width="1.2"/>
+  <rect x="830" y="580" width="200" height="24" rx="6" fill="rgba(180,138,232,.2)"/>
+  <rect x="830" y="592" width="200" height="12" fill="rgba(180,138,232,.2)"/>
+  <text x="930" y="597" text-anchor="middle" font-size="10.5" fill="#B48AE8" font-weight="700">BusStation</text>
+  <line x1="830" y1="604" x2="1030" y2="604" stroke="#B48AE8" stroke-width="1" opacity=".35"/>
+  <text x="842" y="619" font-size="8" fill="#c8a8e8">id: UUID PK</text>
+  <text x="842" y="632" font-size="8" fill="#8a6898">name: String</text>
+  <text x="842" y="645" font-size="8" fill="#8a6898">stationType: BusStationType</text>
+  <text x="842" y="658" font-size="8" fill="#8a6898">cityId: UUID FK→City</text>
+  <text x="842" y="671" font-size="8" fill="#8a6898">locationId?: UUID FK→Location</text>
+  <text x="842" y="684" font-size="8" fill="#8a6898">isMain: Boolean</text>
+  <text x="842" y="697" font-size="8" fill="#8a6898">isActive: Boolean</text>
+  <line x1="830" y1="707" x2="1030" y2="707" stroke="#B48AE8" stroke-width="1" opacity=".3"/>
+  <text x="842" y="720" font-size="8" fill="#6a4878">+getEnrichedMapData()</text>
+  <text x="842" y="733" font-size="8" fill="#6a4878">+getActiveTrips()</text>
+  <text x="842" y="746" font-size="8" fill="#6a4878">+assignEmployee(empId)</text>
+  <text x="842" y="759" font-size="8" fill="#6a4878">+assignManager(mgrId)</text>
+  <text x="842" y="770" font-size="7" fill="#4a2858">→ busTripsFrom[] · busTripsTo[] · buses[]</text>
+</g>
+
+<!-- BUS TRIP -->
+<g class="dnode" data-t="BusTrip" data-d="Scheduled journey between stations. status: SCHEDULED→BOARDING→DEPARTED→ARRIVED/CANCELLED/DELAYED. availableSeats decrements on booking. isAutoAccept and isDiscountPriority flags.">
+  <rect x="1070" y="580" width="200" height="190" rx="6" fill="rgba(180,138,232,.06)" stroke="#B48AE8" stroke-width="1"/>
+  <rect x="1070" y="580" width="200" height="24" rx="6" fill="rgba(180,138,232,.18)"/>
+  <rect x="1070" y="592" width="200" height="12" fill="rgba(180,138,232,.18)"/>
+  <text x="1170" y="597" text-anchor="middle" font-size="10.5" fill="#B48AE8" font-weight="700">BusTrip</text>
+  <line x1="1070" y1="604" x2="1270" y2="604" stroke="#B48AE8" stroke-width="1" opacity=".35"/>
+  <text x="1082" y="619" font-size="8" fill="#c8a8e8">id: UUID PK</text>
+  <text x="1082" y="632" font-size="8" fill="#8a6898">busId: UUID FK→Bus</text>
+  <text x="1082" y="645" font-size="8" fill="#8a6898">fromStationId, toStationId</text>
+  <text x="1082" y="658" font-size="8" fill="#8a6898">departureTime: DateTime</text>
+  <text x="1082" y="671" font-size="8" fill="#8a6898">totalSeats, availableSeats</text>
+  <text x="1082" y="684" font-size="8" fill="#8a6898">pricePerSeat: Decimal</text>
+  <text x="1082" y="697" font-size="8" fill="#8a6898">status: BusTripStatus</text>
+  <line x1="1070" y1="707" x2="1270" y2="707" stroke="#B48AE8" stroke-width="1" opacity=".3"/>
+  <text x="1082" y="720" font-size="8" fill="#6a4878">+bookSeat(empId): Booking</text>
+  <text x="1082" y="733" font-size="8" fill="#6a4878">+depart() / arrive()</text>
+  <text x="1082" y="746" font-size="8" fill="#6a4878">+getOccupancy(): int</text>
+  <text x="1082" y="759" font-size="8" fill="#6a4878">+getSeatMap(): BusSeat[]</text>
+  <text x="1082" y="762" font-size="7" fill="#4a2858">→ bookings[] · cancellations[]</text>
+</g>
+
+<!-- BUS EMPLOYEE -->
+<g class="dnode" data-t="BusEmployee" data-d="Station operator extending User. verificationStatus (shared VerificationStatus enum). Multi-station via BusEmployeeStation join table. vatNumber + vatVisibility from onboarding wizard. Creates BusStandard, seats, trips, bookings.">
+  <rect x="1310" y="560" width="200" height="230" rx="6" fill="rgba(180,138,232,.06)" stroke="#B48AE8" stroke-width="1"/>
+  <rect x="1310" y="560" width="200" height="24" rx="6" fill="rgba(180,138,232,.18)"/>
+  <rect x="1310" y="572" width="200" height="12" fill="rgba(180,138,232,.18)"/>
+  <text x="1410" y="577" text-anchor="middle" font-size="10.5" fill="#B48AE8" font-weight="700">BusEmployee</text>
+  <line x1="1310" y1="584" x2="1510" y2="584" stroke="#B48AE8" stroke-width="1" opacity=".35"/>
+  <text x="1322" y="599" font-size="8" fill="#c8a8e8">userId: UUID PK FK→User</text>
+  <text x="1322" y="612" font-size="8" fill="#8a6898">employeeCode?: String</text>
+  <text x="1322" y="625" font-size="8" fill="#8a6898">verificationStatus: VerifStatus</text>
+  <text x="1322" y="638" font-size="8" fill="#8a6898">verifiedAt?, verifiedById?</text>
+  <text x="1322" y="651" font-size="8" fill="#8a6898">vatNumber?, vatVisibility?</text>
+  <text x="1322" y="664" font-size="8" fill="#8a6898">isActive: Boolean</text>
+  <line x1="1310" y1="674" x2="1510" y2="674" stroke="#B48AE8" stroke-width="1" opacity=".3"/>
+  <text x="1322" y="687" font-size="8" fill="#6a4878">+getAssignedStations()</text>
+  <text x="1322" y="700" font-size="8" fill="#6a4878">+confirmLoad(delivId)</text>
+  <text x="1322" y="713" font-size="8" fill="#6a4878">+confirmDelivery(delivId)</text>
+  <text x="1322" y="726" font-size="8" fill="#6a4878">+registerBus(data)</text>
+  <text x="1322" y="739" font-size="8" fill="#6a4878">+scheduleTrip(data)</text>
+  <text x="1322" y="752" font-size="8" fill="#6a4878">+bookSeat(tripId, seatId)</text>
+  <text x="1322" y="781" font-size="7" fill="#4a2858">→ stationAssignments[] (via BusEmployeeStation)</text>
+</g>
+
+<!-- CITY RIDE CAPACITY -->
+<g class="dnode" data-t="CityRideCapacity" data-desc="@@unique [cityId, serviceType]. maxActive defines the cap. When active driver count reaches this, DriverWaitlist is triggered.">
+  <rect x="730" y="560" width="185" height="120" rx="6" fill="rgba(74,158,255,.05)" stroke="#4A9EFF" stroke-width="1"/>
+  <rect x="730" y="560" width="185" height="24" rx="6" fill="rgba(74,158,255,.17)"/>
+  <rect x="730" y="572" width="185" height="12" fill="rgba(74,158,255,.17)"/>
+  <text x="822" y="577" text-anchor="middle" font-size="9.5" fill="#4A9EFF" font-weight="700">CityRideCapacity</text>
+  <line x1="730" y1="584" x2="915" y2="584" stroke="#4A9EFF" stroke-width="1" opacity=".35"/>
+  <text x="742" y="599" font-size="8" fill="#7ab0d8">id: UUID PK</text>
+  <text x="742" y="612" font-size="8" fill="#4a7898">cityId: UUID FK→City</text>
+  <text x="742" y="625" font-size="8" fill="#4a7898">serviceType: ServiceType</text>
+  <text x="742" y="638" font-size="8" fill="#4a7898">maxActive: Int</text>
+  <line x1="730" y1="648" x2="915" y2="648" stroke="#4A9EFF" stroke-width="1" opacity=".3"/>
+  <text x="742" y="661" font-size="8" fill="#2a5878">+isAtCapacity(): bool</text>
+  <text x="742" y="674" font-size="8" fill="#2a5878">+getQueueSize(): int</text>
+</g>
+
+<!-- DRIVER WAITLIST -->
+<g class="dnode" data-t="DriverWaitlist" data-d="@@unique [driverId, cityId, serviceType]. status: WAITING→PROMOTED. priorityScore determines promotion order. notifiedAt stamps when driver was notified. Driver can work another city while WAITING.">
+  <rect x="730" y="700" width="185" height="165" rx="6" fill="rgba(74,158,255,.05)" stroke="#4A9EFF" stroke-width="1"/>
+  <rect x="730" y="700" width="185" height="24" rx="6" fill="rgba(74,158,255,.17)"/>
+  <rect x="730" y="712" width="185" height="12" fill="rgba(74,158,255,.17)"/>
+  <text x="822" y="717" text-anchor="middle" font-size="9.5" fill="#4A9EFF" font-weight="700">DriverWaitlist</text>
+  <line x1="730" y1="724" x2="915" y2="724" stroke="#4A9EFF" stroke-width="1" opacity=".35"/>
+  <text x="742" y="739" font-size="8" fill="#7ab0d8">id: UUID PK</text>
+  <text x="742" y="752" font-size="8" fill="#4a7898">driverId: UUID FK→Driver</text>
+  <text x="742" y="765" font-size="8" fill="#4a7898">cityId: UUID FK→City</text>
+  <text x="742" y="778" font-size="8" fill="#4a7898">status: WaitlistStatus</text>
+  <text x="742" y="791" font-size="8" fill="#4a7898">priorityScore: Int</text>
+  <text x="742" y="804" font-size="8" fill="#4a7898">promotedAt?: DateTime</text>
+  <text x="742" y="817" font-size="8" fill="#4a7898">notifiedAt?: DateTime</text>
+  <line x1="730" y1="827" x2="915" y2="827" stroke="#4A9EFF" stroke-width="1" opacity=".3"/>
+  <text x="742" y="840" font-size="8" fill="#2a5878">+promote()</text>
+  <text x="742" y="853" font-size="8" fill="#2a5878">+notify()</text>
+  <text x="742" y="866" font-size="8" fill="#2a5878">+getPosition(): int</text>
+</g>
+
+<!-- LOCATION -->
+<g class="dnode" data-t="Location" data-d="Stores a geographic point with PostGIS geometry(Point, 4326). Gist index on geo field. Used for trip origins/destinations, delivery pickup/dropoff, agent business address, bus station pins.">
+  <rect x="1310" y="810" width="195" height="160" rx="6" fill="rgba(116,198,157,.06)" stroke="#74C69D" stroke-width="1"/>
+  <rect x="1310" y="810" width="195" height="24" rx="6" fill="rgba(116,198,157,.18)"/>
+  <rect x="1310" y="822" width="195" height="12" fill="rgba(116,198,157,.18)"/>
+  <text x="1407" y="827" text-anchor="middle" font-size="10.5" fill="#74C69D" font-weight="700">Location</text>
+  <line x1="1310" y1="834" x2="1505" y2="834" stroke="#74C69D" stroke-width="1" opacity=".35"/>
+  <text x="1322" y="849" font-size="8" fill="#94d8b8">id: UUID PK</text>
+  <text x="1322" y="862" font-size="8" fill="#4a8868">latitude: Decimal(10,8)</text>
+  <text x="1322" y="875" font-size="8" fill="#4a8868">longitude: Decimal(11,8)</text>
+  <text x="1322" y="888" font-size="8" fill="#4a8868">geo: geometry(Point,4326)</text>
+  <text x="1322" y="901" font-size="8" fill="#4a8868">address: String</text>
+  <text x="1322" y="914" font-size="8" fill="#4a8868">cityId: UUID FK→City</text>
+  <line x1="1310" y1="924" x2="1505" y2="924" stroke="#74C69D" stroke-width="1" opacity=".3"/>
+  <text x="1322" y="937" font-size="8" fill="#2a6848">+distanceTo(loc): meters</text>
+  <text x="1322" y="950" font-size="8" fill="#2a6848">+enrichWithPOI(): void</text>
+  <text x="1322" y="963" font-size="8" fill="#2a6848">+toGeoJSON(): Object</text>
+</g>
+
+<!-- ─── RELATIONSHIPS ─── -->
+<!-- User → Client 1:1 -->
+<line x1="830" y1="140" x2="460" y2="110" stroke="#00C9A7" stroke-width="1.3" marker-end="url(#ca)" opacity=".65"/>
+<text x="635" y="115" text-anchor="middle" font-size="7.5" fill="#3a7868">1:1 extends</text>
+<!-- User → Driver 1:1 -->
+<line x1="830" y1="175" x2="460" y2="350" stroke="#4D9DE0" stroke-width="1.3" marker-end="url(#cc)" opacity=".55"/>
+<text x="600" y="270" text-anchor="middle" font-size="7.5" fill="#3a6888">1:1 extends</text>
+<!-- User → Agent 1:1 -->
+<line x1="1040" y1="175" x2="1070" y2="400" stroke="#FFB347" stroke-width="1.3" marker-end="url(#cd)" opacity=".55"/>
+<!-- Driver → Vehicle many:1 -->
+<line x1="260" y1="385" x2="230" y2="370" stroke="#4D9DE0" stroke-width="1" marker-end="url(#cc)" stroke-dasharray="5,3" opacity=".5"/>
+<text x="242" y="370" font-size="7.5" fill="#3a6888" text-anchor="middle">m:1</text>
+<!-- Driver → Document 1:many -->
+<line x1="260" y1="460" x2="230" y2="780" stroke="#FFD700" stroke-width="1" marker-end="url(#cg)" stroke-dasharray="4,3" opacity=".5"/>
+<!-- Driver → DriverSafetyCheck 1:many -->
+<line x1="260" y1="490" x2="230" y2="560" stroke="#4D9DE0" stroke-width="1" marker-end="url(#cc)" stroke-dasharray="4,3" opacity=".45"/>
+<!-- Client → SharedRideRequest 1:many -->
+<line x1="360" y1="230" x2="540" y2="330" stroke="#00C9A7" stroke-width="1" marker-end="url(#ca)" stroke-dasharray="4,3" opacity=".5"/>
+<text x="420" y="285" text-anchor="middle" font-size="7.5" fill="#3a7868">1:many</text>
+<!-- Trip → SharedRideRequest 1:many -->
+<line x1="610" y1="270" x2="610" y2="310" stroke="#00C9A7" stroke-width="1.3" marker-end="url(#ca)" opacity=".6"/>
+<text x="620" y="293" font-size="7.5" fill="#3a7868">1:many</text>
+<!-- Delivery → Agent many:1 -->
+<line x1="1030" y1="420" x2="1070" y2="420" stroke="#FFB347" stroke-width="1.3" marker-end="url(#cd)" opacity=".65"/>
+<text x="1050" y="413" text-anchor="middle" font-size="7.5" fill="#7a5828">many:1</text>
+<!-- Client → RewardActivity 1:many -->
+<line x1="360" y1="230" x2="367" y2="560" stroke="#FFA500" stroke-width="1" marker-end="url(#cf)" stroke-dasharray="4,3" opacity=".5"/>
+<text x="350" y="400" font-size="7.5" fill="#7a6018">1:many</text>
+<!-- Client → RewardRedemption 1:many -->
+<line x1="380" y1="230" x2="367" y2="750" stroke="#FFA500" stroke-width="1" marker-end="url(#cf)" stroke-dasharray="4,3" opacity=".4"/>
+<!-- User → Wallet 1:1 -->
+<line x1="830" y1="210" x2="695" y2="620" stroke="#FFA500" stroke-width="1" marker-end="url(#cf)" stroke-dasharray="4,3" opacity=".5"/>
+<text x="750" y="430" text-anchor="middle" font-size="7.5" fill="#7a6018">1:1</text>
+<!-- Wallet → WalletTransaction 1:many -->
+<line x1="597" y1="735" x2="597" y2="760" stroke="#FFA500" stroke-width="1.3" marker-end="url(#cf)" opacity=".6"/>
+<text x="607" y="750" font-size="7.5" fill="#7a6018">1:many</text>
+<!-- BusStation → BusTrip 1:many -->
+<line x1="1030" y1="660" x2="1070" y2="660" stroke="#B48AE8" stroke-width="1.3" marker-end="url(#ce)" opacity=".65"/>
+<text x="1050" y="653" text-anchor="middle" font-size="7.5" fill="#6a4878">1:many</text>
+<!-- BusEmployee → BusStation many:many -->
+<line x1="1310" y1="640" x2="1030" y2="660" stroke="#B48AE8" stroke-width="1" marker-end="url(#ce)" stroke-dasharray="3,3" opacity=".45"/>
+<text x="1170" y="668" text-anchor="middle" font-size="7.5" fill="#5a3868">m:m BusEmployeeStation</text>
+<!-- CityRideCapacity → DriverWaitlist -->
+<line x1="822" y1="680" x2="822" y2="700" stroke="#4A9EFF" stroke-width="1.3" marker-end="url(#cb)" opacity=".6"/>
+<text x="840" y="692" font-size="7.5" fill="#2a5878">triggers</text>
+<!-- Driver → DriverWaitlist 1:many -->
+<line x1="460" y1="395" x2="730" y2="760" stroke="#4A9EFF" stroke-width="1" marker-end="url(#cb)" stroke-dasharray="4,3" opacity=".4"/>
+<!-- Location used by Trip/Delivery/BusStation -->
+<line x1="1310" y1="880" x2="1030" y2="200" stroke="#74C69D" stroke-width="1" marker-end="url(#ch)" stroke-dasharray="3,4" opacity=".3"/>
+<text x="1200" y="550" text-anchor="middle" font-size="7.5" fill="#2a6848">used by Trip, Delivery, BusStation</text>
 </svg>
 </div>
 </div>
-
-<!-- ========== PANEL 3: Sequence diagrams for new delivery flows ========= -->
+<!-- ══════════════════════════════════════════════════════════════
+     PANEL 3 — SEQUENCE DIAGRAM
+══════════════════════════════════════════════════════════════ -->
 <div class="panel" id="panel-seq">
 <div class="seq-tabs">
-  <button class="seq-tab active" onclick="showSeq('s3a',this)">① Small parcel (instant, door pickup, agent handoff if long)</button>
-  <button class="seq-tab" onclick="showSeq('s3b',this)">② Large short (instant direct, truck/livestock)</button>
-  <button class="seq-tab" onclick="showSeq('s3c',this)">③ Large long (quotation → schedule)</button>
+  <button class="seq-tab active" onclick="showSeq('s1',this)">① Shared Ride Booking</button>
+  <button class="seq-tab" onclick="showSeq('s2',this)">② Private Ride (Safety→Online)</button>
+  <button class="seq-tab" onclick="showSeq('s3',this)">③ Parcel Delivery</button>
+  <button class="seq-tab" onclick="showSeq('s4',this)">④ Capacity &amp; Waitlist</button>
+  <button class="seq-tab" onclick="showSeq('s5',this)">⑤ Rewards &amp; Wallet</button>
+  <button class="seq-tab" onclick="showSeq('s6',this)">⑥ Doc Verification</button>
+  <button class="seq-tab" onclick="showSeq('s7',this)">⑦ Bus Operations</button>
 </div>
 <div class="diagram-scroll">
-<!-- 3a: small parcel (door pickup, optional handoff) -->
-<svg class="seq-flow active" id="seq-s3a" width="1400" height="900" viewBox="0 0 1400 900">
-<rect width="1400" height="900" fill="#0e1512" rx="12"/>
-<text x="700" y="30" fill="#FFB347" font-size="14" font-weight="700">① Small parcel (instant) — door pickup, if long → agent handoff</text>
+
+<!-- ① SHARED RIDE -->
+<svg class="seq-flow active" id="seq-s1" width="1440" height="900" viewBox="0 0 1440 900">
+<defs>
+  <marker id="sa" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#00C9A7" opacity=".85"/></marker>
+  <marker id="sb" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#4A9EFF" opacity=".85"/></marker>
+  <marker id="sc" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#4D9DE0" opacity=".85"/></marker>
+  <marker id="sd" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#FF6B9D" opacity=".85"/></marker>
+  <marker id="se" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#74C69D" opacity=".85"/></marker>
+  <marker id="sf" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#FFA500" opacity=".85"/></marker>
+  <marker id="sg" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#FFB347" opacity=".85"/></marker>
+</defs>
+<rect width="1440" height="900" fill="#0e1512" rx="12"/>
+<text x="720" y="28" text-anchor="middle" font-size="13" fill="#00C9A7" font-weight="700" font-family="Syne,sans-serif">① Shared Ride Booking Flow</text>
+
+<!-- Lifelines -->
+<g font-family="JetBrains Mono,monospace">
+  <rect x="55"   y="46" width="100" height="28" rx="4" fill="rgba(0,201,167,.15)"   stroke="#00C9A7" stroke-width="1.2"/><text x="105"  y="65" text-anchor="middle" font-size="8.5" fill="#00C9A7" font-weight="700">CLIENT</text>
+  <rect x="245"  y="46" width="100" height="28" rx="4" fill="rgba(74,158,255,.15)"  stroke="#4A9EFF" stroke-width="1.2"/><text x="295"  y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">SYSTEM/API</text>
+  <rect x="430"  y="46" width="110" height="28" rx="4" fill="rgba(116,198,157,.15)" stroke="#74C69D" stroke-width="1.2"/><text x="485"  y="65" text-anchor="middle" font-size="8.5" fill="#74C69D" font-weight="700">MAP LOCATOR</text>
+  <rect x="620"  y="46" width="100" height="28" rx="4" fill="rgba(255,107,157,.15)" stroke="#FF6B9D" stroke-width="1.2"/><text x="670"  y="65" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">DATABASE</text>
+  <rect x="800"  y="46" width="100" height="28" rx="4" fill="rgba(77,157,224,.15)"  stroke="#4D9DE0" stroke-width="1.2"/><text x="850"  y="65" text-anchor="middle" font-size="8.5" fill="#4D9DE0" font-weight="700">DRIVER</text>
+  <rect x="990"  y="46" width="110" height="28" rx="4" fill="rgba(74,158,255,.1)"   stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="1045" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">NOTIFICATIONS</text>
+  <rect x="1165" y="46" width="100" height="28" rx="4" fill="rgba(255,165,0,.1)"    stroke="#FFA500" stroke-width="1"/><text x="1215" y="65" text-anchor="middle" font-size="8.5" fill="#FFA500" font-weight="700">REWARDS</text>
+</g>
+<!-- Dashed lifelines -->
+<line x1="105"  y1="74" x2="105"  y2="870" stroke="#00C9A7" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="295"  y1="74" x2="295"  y2="870" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="485"  y1="74" x2="485"  y2="870" stroke="#74C69D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="670"  y1="74" x2="670"  y2="870" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="850"  y1="74" x2="850"  y2="870" stroke="#4D9DE0" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="1045" y1="74" x2="1045" y2="870" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+<line x1="1215" y1="74" x2="1215" y2="870" stroke="#FFA500" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+
 <g font-family="JetBrains Mono,monospace" font-size="8.5">
-<rect x="20" y="50" width="90" height="26" fill="rgba(0,201,167,.15)" stroke="#00C9A7"/><text x="65" y="68" fill="#00C9A7">CLIENT</text>
-<rect x="150" y="50" width="100" height="26" fill="rgba(74,158,255,.15)" stroke="#4A9EFF"/><text x="200" y="68" fill="#4A9EFF">SYSTEM</text>
-<rect x="290" y="50" width="90" height="26" fill="rgba(77,157,224,.15)" stroke="#4D9DE0"/><text x="335" y="68" fill="#4D9DE0">DRIVER</text>
-<rect x="420" y="50" width="90" height="26" fill="rgba(255,179,71,.15)" stroke="#FFB347"/><text x="465" y="68" fill="#FFB347">AGENT</text>
-<rect x="550" y="50" width="100" height="26" fill="rgba(255,107,157,.15)" stroke="#FF6B9D"/><text x="600" y="68" fill="#FF6B9D">DB</text>
-<rect x="690" y="50" width="100" height="26" fill="rgba(74,158,255,.1)" stroke="#4A9EFF" stroke-dasharray="4,3"/><text x="740" y="68" fill="#4A9EFF">NOTIFY</text>
-<line x1="65" y1="76" x2="65" y2="850" stroke="#00C9A7" stroke-dasharray="4,4" opacity=".3"/>
-<line x1="200" y1="76" x2="200" y2="850" stroke="#4A9EFF" stroke-dasharray="4,4" opacity=".3"/>
-<line x1="335" y1="76" x2="335" y2="850" stroke="#4D9DE0" stroke-dasharray="4,4" opacity=".3"/>
-<line x1="465" y1="76" x2="465" y2="850" stroke="#FFB347" stroke-dasharray="4,4" opacity=".3"/>
-<line x1="600" y1="76" x2="600" y2="850" stroke="#FF6B9D" stroke-dasharray="4,4" opacity=".3"/>
-<line x1="740" y1="76" x2="740" y2="850" stroke="#4A9EFF" stroke-dasharray="4,4" opacity=".3"/>
+<!-- activation boxes -->
+<rect x="98" y="100" width="14" height="560" rx="2" fill="rgba(0,201,167,.15)"/>
+<rect x="288" y="115" width="14" height="560" rx="2" fill="rgba(74,158,255,.15)"/>
 
-<rect x="59" y="100" width="14" height="700" fill="rgba(0,201,167,.12)"/>
-<rect x="194" y="114" width="14" height="700" fill="rgba(74,158,255,.12)"/>
+<!-- Messages -->
+<line x1="112" y1="115" x2="288" y2="115" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
+<text x="200" y="110" text-anchor="middle" fill="#00C9A7">1. searchTrips(pickup, dropoff, city)</text>
 
-<line x1="53" y1="114" x2="194" y2="114" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="123" y="109" fill="#00C9A7">1. requestSmallParcel(pickup, dropoff, size=small)</text>
-<line x1="200" y1="136" x2="600" y2="136" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="400" y="131" fill="#FF6B9D">2. classify distance: SHORT/LONG; pricingModel=INSTANT</text>
-<line x1="200" y1="158" x2="600" y2="158" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="400" y="153" fill="#FF6B9D">3. INSERT Delivery (small, instant, handoffRequired = (LONG? true:false))</text>
-<line x1="200" y1="180" x2="740" y2="180" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="470" y="175" fill="#4A9EFF">4. broadcast to nearby drivers</text>
-<rect x="319" y="192" width="34" height="20" fill="rgba(77,157,224,.12)"/>
-<line x1="335" y1="202" x2="207" y2="202" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="271" y="197" fill="#4D9DE0">5. driver accepts</text>
-<line x1="200" y1="224" x2="600" y2="224" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="400" y="219" fill="#FF6B9D">6. assign driver, update status=ASSIGNED</text>
-<line x1="200" y1="246" x2="65" y2="246" stroke="#4A9EFF" stroke-width="1" marker-end="url(#a0)" stroke-dasharray="4,3"/>
-<text x="132" y="241" fill="#4A9EFF">7. driver details & ETA</text>
-<line x1="335" y1="268" x2="207" y2="268" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="271" y="263" fill="#4D9DE0">8. arrived at door, scan QR</text>
-<line x1="200" y1="290" x2="600" y2="290" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="400" y="285" fill="#FF6B9D">9. INSERT ScanEvent (door pickup, location)</text>
-<text x="50" y="315" fill="#aa8040" font-size="9">alt [distance SHORT]</text>
-<line x1="335" y1="330" x2="200" y2="330" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="267" y="325" fill="#4D9DE0">10a. deliver direct to destination</text>
-<text x="50" y="355" fill="#aa8040" font-size="9">else [LONG]</text>
-<line x1="335" y1="370" x2="465" y2="370" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="400" y="365" fill="#4D9DE0">10b. deliver to agent hub (handoff)</text>
-<line x1="465" y1="392" x2="600" y2="392" stroke="#FFB347" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="532" y="387" fill="#FFB347">11. agent scans, takes custody</text>
-<line x1="465" y1="414" x2="200" y2="414" stroke="#FFB347" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="332" y="409" fill="#FFB347">12. agent transports final leg</text>
-<line x1="200" y1="436" x2="600" y2="436" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="400" y="431" fill="#FF6B9D">13. status=DELIVERED, proof</text>
-<line x1="200" y1="458" x2="740" y2="458" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="470" y="453" fill="#4A9EFF">14. push delivered to client</text>
+<line x1="295" y1="138" x2="485" y2="138" stroke="#74C69D" stroke-width="1.5" marker-end="url(#se)"/>
+<text x="390" y="133" text-anchor="middle" fill="#74C69D">2. queryPOIs(text, status=APPROVED)</text>
+
+<line x1="485" y1="158" x2="302" y2="158" stroke="#74C69D" stroke-width="1" marker-end="url(#se)" stroke-dasharray="4,3"/>
+<text x="390" y="153" text-anchor="middle" fill="#74C69D" opacity=".7">3. [POI suggestions returned]</text>
+
+<line x1="295" y1="182" x2="670" y2="182" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="482" y="177" text-anchor="middle" fill="#FF6B9D">4. SELECT trips WHERE city+route+availableSeats&gt;0</text>
+
+<line x1="670" y1="202" x2="302" y2="202" stroke="#FF6B9D" stroke-width="1" marker-end="url(#sb)" stroke-dasharray="4,3"/>
+<text x="482" y="197" text-anchor="middle" fill="#FF6B9D" opacity=".7">5. [Trip[] with driver + vehicle data]</text>
+
+<line x1="295" y1="226" x2="112" y2="226" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sa)" stroke-dasharray="4,3"/>
+<text x="200" y="221" text-anchor="middle" fill="#4A9EFF" opacity=".8">6. [trip list + location suggestions]</text>
+
+<line x1="112" y1="252" x2="288" y2="252" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
+<text x="200" y="247" text-anchor="middle" fill="#00C9A7">7. bookRide(tripId, seats, pickupCoords)</text>
+
+<line x1="295" y1="276" x2="670" y2="276" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="482" y="271" text-anchor="middle" fill="#FF6B9D">8. INSERT SharedRideRequest(status=PENDING)</text>
+
+<line x1="295" y1="298" x2="670" y2="298" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="482" y="293" text-anchor="middle" fill="#FF6B9D">9. UPDATE Trip.remainingSeats -= numberOfSeats</text>
+
+<!-- alt box -->
+<rect x="270" y="310" width="600" height="72" rx="4" fill="none" stroke="rgba(0,201,167,.2)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="280" y="324" font-size="7.5" fill="#2a6048">alt  [isAutoAccept = true]</text>
+<line x1="295" y1="338" x2="670" y2="338" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="482" y="333" text-anchor="middle" fill="#FF6B9D">10a. UPDATE SharedRideRequest.status=ACCEPTED</text>
+<text x="280" y="356" font-size="7.5" fill="#2a6048">else  [manual accept]</text>
+<line x1="295" y1="370" x2="850" y2="370" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="572" y="365" text-anchor="middle" fill="#4D9DE0">10b. PUSH notification → Driver</text>
+
+<rect x="822" y="382" width="56" height="22" rx="3" fill="rgba(77,157,224,.12)"/>
+<line x1="850" y1="393" x2="302" y2="393" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="576" y="388" text-anchor="middle" fill="#4D9DE0">11. acceptRequest(requestId)</text>
+
+<line x1="295" y1="416" x2="670" y2="416" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="482" y="411" text-anchor="middle" fill="#FF6B9D">12. UPDATE SharedRideRequest.status=ACCEPTED</text>
+
+<line x1="295" y1="438" x2="1045" y2="438" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="670" y="433" text-anchor="middle" fill="#4A9EFF">13. PUSH: "ride accepted, driver on way" → Client</text>
+
+<!-- loop box -->
+<rect x="270" y="450" width="600" height="56" rx="4" fill="none" stroke="rgba(77,157,224,.18)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="280" y="464" font-size="7.5" fill="#2a4868">loop  [trip in progress — live GPS]</text>
+<line x1="850" y1="476" x2="302" y2="476" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="576" y="471" text-anchor="middle" fill="#4D9DE0">14. UPDATE DriverLocation(lat, lng)</text>
+<line x1="295" y1="496" x2="112" y2="496" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sa)" stroke-dasharray="4,3"/>
+<text x="200" y="491" text-anchor="middle" fill="#4A9EFF" opacity=".7">15. [live location stream → Client]</text>
+
+<line x1="850" y1="522" x2="302" y2="522" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="576" y="517" text-anchor="middle" fill="#4D9DE0">16. completeTrip(tripId)</text>
+
+<line x1="295" y1="546" x2="670" y2="546" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="482" y="541" text-anchor="middle" fill="#FF6B9D">17. UPDATE Trip.status=COMPLETED + SharedRideReq.status=COMPLETED</text>
+
+<line x1="295" y1="568" x2="1215" y2="568" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sf)"/>
+<text x="755" y="563" text-anchor="middle" fill="#FFA500">18. creditPoints(clientId, eventType=TRIP_COMPLETED)</text>
+
+<line x1="1215" y1="590" x2="677" y2="590" stroke="#FFA500" stroke-width="1" marker-end="url(#sd)" stroke-dasharray="4,3"/>
+<text x="946" y="585" text-anchor="middle" fill="#FFA500" opacity=".8">19. INSERT RewardActivity + UPDATE Client.rewardPoints</text>
+
+<line x1="295" y1="614" x2="1045" y2="614" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="670" y="609" text-anchor="middle" fill="#4A9EFF">20. PUSH: "trip complete — rate your driver"</text>
+
+<rect x="78" y="626" width="54" height="20" rx="3" fill="rgba(0,201,167,.12)"/>
+<line x1="112" y1="636" x2="288" y2="636" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
+<text x="200" y="631" text-anchor="middle" fill="#00C9A7">21. rateDriver(tripId, stars, comment)</text>
+
+<line x1="295" y1="658" x2="670" y2="658" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="482" y="653" text-anchor="middle" fill="#FF6B9D">22. INSERT TripRating (@@unique tripId+reviewerId)</text>
+
+<line x1="295" y1="682" x2="112" y2="682" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sa)" stroke-dasharray="4,3"/>
+<text x="200" y="677" text-anchor="middle" fill="#4A9EFF" opacity=".8">23. [rating saved confirmation]</text>
 </g>
 </svg>
 
-<!-- 3b: Large short (instant, direct, truck/livestock) -->
-<svg class="seq-flow" id="seq-s3b" width="1300" height="650" viewBox="0 0 1300 650">
-<rect width="1300" height="650" fill="#0e1512" rx="12"/>
-<text x="650" y="30" fill="#b86b2f" font-size="14" font-weight="700">② Large package short distance — instant, direct special vehicle</text>
+<!-- ② PRIVATE RIDE -->
+<svg class="seq-flow" id="seq-s2" width="1380" height="860" viewBox="0 0 1380 860">
+<rect width="1380" height="860" fill="#0e1512" rx="12"/>
+<text x="690" y="28" text-anchor="middle" font-size="13" fill="#4D9DE0" font-weight="700" font-family="Syne,sans-serif">② Private Ride — Safety Check → Capacity → Online</text>
 <g font-family="JetBrains Mono,monospace">
-<rect x="20" y="50" width="90" height="26" fill="rgba(0,201,167,.15)" stroke="#00C9A7"/><text x="65" y="70" fill="#00C9A7">CLIENT</text>
-<rect x="150" y="50" width="100" height="26" fill="rgba(74,158,255,.15)" stroke="#4A9EFF"/><text x="200" y="70" fill="#4A9EFF">SYSTEM</text>
-<rect x="290" y="50" width="110" height="26" fill="rgba(184,107,47,.15)" stroke="#b86b2f"/><text x="345" y="70" fill="#b86b2f">SPECIAL VEH</text>
-<rect x="440" y="50" width="100" height="26" fill="rgba(255,107,157,.15)" stroke="#FF6B9D"/><text x="490" y="70" fill="#FF6B9D">DB</text>
-<line x1="65" y1="76" x2="65" y2="600" stroke="#00C9A7" stroke-dasharray="4,4"/>
-<line x1="200" y1="76" x2="200" y2="600" stroke="#4A9EFF" stroke-dasharray="4,4"/>
-<line x1="345" y1="76" x2="345" y2="600" stroke="#b86b2f" stroke-dasharray="4,4"/>
-<line x1="490" y1="76" x2="490" y2="600" stroke="#FF6B9D" stroke-dasharray="4,4"/>
-<rect x="59" y="100" width="14" height="450" fill="rgba(0,201,167,.12)"/>
-<rect x="194" y="114" width="14" height="450" fill="rgba(74,158,255,.12)"/>
+  <rect x="30"   y="46" width="100" height="28" rx="4" fill="rgba(77,157,224,.15)"  stroke="#4D9DE0" stroke-width="1.2"/><text x="80"   y="65" text-anchor="middle" font-size="8.5" fill="#4D9DE0" font-weight="700">DRIVER</text>
+  <rect x="200"  y="46" width="100" height="28" rx="4" fill="rgba(74,158,255,.15)"  stroke="#4A9EFF" stroke-width="1.2"/><text x="250"  y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">SYSTEM/API</text>
+  <rect x="375"  y="46" width="100" height="28" rx="4" fill="rgba(255,107,157,.15)" stroke="#FF6B9D" stroke-width="1.2"/><text x="425"  y="65" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">DATABASE</text>
+  <rect x="545"  y="46" width="110" height="28" rx="4" fill="rgba(255,215,0,.12)"   stroke="#FFD700" stroke-width="1.2"/><text x="600"  y="65" text-anchor="middle" font-size="8.5" fill="#FFD700" font-weight="700">CAPACITY SVC</text>
+  <rect x="720"  y="46" width="110" height="28" rx="4" fill="rgba(116,198,157,.12)" stroke="#74C69D" stroke-width="1"/><text x="775"  y="65" text-anchor="middle" font-size="8.5" fill="#74C69D" font-weight="700">MAP LOCATOR</text>
+  <rect x="900"  y="46" width="110" height="28" rx="4" fill="rgba(74,158,255,.1)"   stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="955"  y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">NOTIFICATIONS</text>
+  <rect x="1080" y="46" width="100" height="28" rx="4" fill="rgba(0,201,167,.1)"    stroke="#00C9A7" stroke-width="1" stroke-dasharray="4,3"/><text x="1130" y="65" text-anchor="middle" font-size="8.5" fill="#00C9A7" font-weight="700">CLIENT</text>
+</g>
+<line x1="80"   y1="74" x2="80"   y2="830" stroke="#4D9DE0" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="250"  y1="74" x2="250"  y2="830" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="425"  y1="74" x2="425"  y2="830" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="600"  y1="74" x2="600"  y2="830" stroke="#FFD700" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="775"  y1="74" x2="775"  y2="830" stroke="#74C69D" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+<line x1="955"  y1="74" x2="955"  y2="830" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+<line x1="1130" y1="74" x2="1130" y2="830" stroke="#00C9A7" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
 
-<line x1="53" y1="114" x2="194" y2="114" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="123" y="109" fill="#00C9A7">1. requestLargeShort(removal/livestock, address)</text>
-<line x1="200" y1="136" x2="490" y2="136" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="345" y="131" fill="#FF6B9D">2. classify short, size=large, instant pricing</text>
-<line x1="200" y1="158" x2="490" y2="158" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="345" y="153" fill="#FF6B9D">3. INSERT Delivery (large, short, directSpecial=true, handoffRequired=false)</text>
-<line x1="200" y1="180" x2="345" y2="180" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="272" y="175" fill="#b86b2f">4. find nearest suitable truck/livestock carrier</text>
-<rect x="329" y="192" width="34" height="20" fill="rgba(184,107,47,.12)"/>
-<line x1="345" y1="202" x2="207" y2="202" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="276" y="197" fill="#b86b2f">5. vehicle assigned</text>
-<line x1="200" y1="224" x2="490" y2="224" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="345" y="219" fill="#FF6B9D">6. link vehicle, status=ASSIGNED</text>
-<line x1="345" y1="246" x2="200" y2="246" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="272" y="241" fill="#b86b2f">7. proceed to pickup</text>
-<line x1="345" y1="268" x2="65" y2="268" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="205" y="263" fill="#b86b2f">8. door pickup, scan (optional)</text>
-<line x1="345" y1="290" x2="65" y2="290" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="205" y="285" fill="#b86b2f">9. direct transport to destination</text>
-<line x1="345" y1="312" x2="200" y2="312" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="272" y="307" fill="#b86b2f">10. confirm delivery</text>
-<line x1="200" y1="334" x2="490" y2="334" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="345" y="329" fill="#FF6B9D">11. status=DELIVERED</text>
+<g font-family="JetBrains Mono,monospace" font-size="8.5">
+<rect x="54" y="100" width="14" height="590" rx="2" fill="rgba(77,157,224,.15)"/>
+<rect x="224" y="114" width="14" height="590" rx="2" fill="rgba(74,158,255,.12)"/>
+
+<line x1="68" y1="114" x2="224" y2="114" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="156" y="109" text-anchor="middle" fill="#4D9DE0">1. selectTaxiMode(serviceType=PRIVATE)</text>
+
+<line x1="238" y1="136" x2="68" y2="136" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="153" y="131" text-anchor="middle" fill="#4A9EFF" opacity=".8">2. [Safety Check screen — REQUIRED before online]</text>
+
+<rect x="54" y="148" width="54" height="20" rx="3" fill="rgba(77,157,224,.12)"/>
+<line x1="68" y1="158" x2="224" y2="158" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="156" y="153" text-anchor="middle" fill="#4D9DE0">3. submitSafetyCheck(front[6], rear[4])</text>
+
+<line x1="238" y1="180" x2="425" y2="180" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="331" y="175" text-anchor="middle" fill="#FF6B9D">4. INSERT DriverSafetyCheck(all=true, serviceType)</text>
+
+<line x1="238" y1="202" x2="68" y2="202" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="153" y="197" text-anchor="middle" fill="#4A9EFF" opacity=".8">5. [city selection screen]</text>
+
+<rect x="54" y="214" width="54" height="20" rx="3" fill="rgba(77,157,224,.12)"/>
+<line x1="68" y1="224" x2="224" y2="224" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="156" y="219" text-anchor="middle" fill="#4D9DE0">6. selectCity(cityId)</text>
+
+<line x1="238" y1="246" x2="600" y2="246" stroke="#FFD700" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="419" y="241" text-anchor="middle" fill="#FFD700">7. checkCapacity(cityId, PRIVATE)</text>
+
+<line x1="600" y1="266" x2="432" y2="266" stroke="#FFD700" stroke-width="1" marker-end="url(#sg)" stroke-dasharray="4,3"/>
+<text x="516" y="261" text-anchor="middle" fill="#FFD700" opacity=".75">8. SELECT COUNT active drivers vs maxActive</text>
+
+<!-- alt capacity -->
+<rect x="225" y="278" width="420" height="76" rx="4" fill="none" stroke="rgba(255,215,0,.2)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="235" y="292" font-size="7.5" fill="#6a6020">alt  [count &lt; maxActive]</text>
+<line x1="600" y1="304" x2="257" y2="304" stroke="#FFD700" stroke-width="1" marker-end="url(#sg)" stroke-dasharray="4,3"/>
+<text x="428" y="299" text-anchor="middle" fill="#FFD700" opacity=".75">9a. [OK — allow go online]</text>
+<text x="235" y="322" font-size="7.5" fill="#6a6020">else  [city at capacity]</text>
+<line x1="238" y1="334" x2="432" y2="334" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="335" y="329" text-anchor="middle" fill="#FF6B9D">9b. INSERT DriverWaitlist(WAITING, priorityScore)</text>
+
+<line x1="238" y1="358" x2="425" y2="358" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="331" y="353" text-anchor="middle" fill="#FF6B9D">10. checkDocumentExpiry(driverId)</text>
+
+<!-- alt docs valid/expired -->
+<rect x="225" y="370" width="420" height="62" rx="4" fill="none" stroke="rgba(255,107,107,.18)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="235" y="384" font-size="7.5" fill="#5a2828">alt  [all docs valid]</text>
+<line x1="238" y1="396" x2="68" y2="396" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="153" y="391" text-anchor="middle" fill="#4A9EFF" opacity=".8">11a. [show "Go Online" button]</text>
+<text x="235" y="412" font-size="7.5" fill="#5a2828">else  [expired document]</text>
+<line x1="238" y1="424" x2="68" y2="424" stroke="#FF6B9D" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="153" y="419" text-anchor="middle" fill="#FF6B9D" opacity=".8">11b. [BLOCKED — "Upload Required Docs" alert]</text>
+
+<rect x="54" y="436" width="54" height="20" rx="3" fill="rgba(77,157,224,.12)"/>
+<line x1="68" y1="446" x2="224" y2="446" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="156" y="441" text-anchor="middle" fill="#4D9DE0">12. goOnline(cityId)</text>
+
+<line x1="238" y1="468" x2="425" y2="468" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="331" y="463" text-anchor="middle" fill="#FF6B9D">13. UPDATE Driver.workStatus=ONLINE, currentCityId</text>
+
+<line x1="238" y1="490" x2="775" y2="490" stroke="#74C69D" stroke-width="1.5" marker-end="url(#se)"/>
+<text x="506" y="485" text-anchor="middle" fill="#74C69D">14. loadPOIs(cityBBox, status=APPROVED)</text>
+
+<line x1="775" y1="512" x2="257" y2="512" stroke="#74C69D" stroke-width="1" marker-end="url(#se)" stroke-dasharray="4,3"/>
+<text x="516" y="507" text-anchor="middle" fill="#74C69D" opacity=".75">15. [POI overlay data for map]</text>
+
+<line x1="238" y1="536" x2="68" y2="536" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="153" y="531" text-anchor="middle" fill="#4A9EFF" opacity=".8">16. [map screen, status badge = ONLINE]</text>
+
+<line x1="1130" y1="558" x2="257" y2="558" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
+<text x="693" y="553" text-anchor="middle" fill="#00C9A7">17. requestPrivateRide(pickup, dropoff)</text>
+
+<line x1="238" y1="578" x2="955" y2="578" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="596" y="573" text-anchor="middle" fill="#4A9EFF">18. PUSH: new private ride request → Driver</text>
+
+<rect x="54" y="590" width="54" height="20" rx="3" fill="rgba(77,157,224,.12)"/>
+<line x1="68" y1="600" x2="224" y2="600" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="156" y="595" text-anchor="middle" fill="#4D9DE0">19. acceptRide(tripId)</text>
+
+<line x1="238" y1="622" x2="425" y2="622" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="331" y="617" text-anchor="middle" fill="#FF6B9D">20. UPDATE Trip.status=ACTIVE, Driver.isOnTrip=true</text>
+
+<line x1="238" y1="644" x2="955" y2="644" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="596" y="639" text-anchor="middle" fill="#4A9EFF">21. PUSH: "driver en route" → Client</text>
+
+<line x1="68" y1="668" x2="224" y2="668" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="156" y="663" text-anchor="middle" fill="#4D9DE0">22. completeRide(tripId)</text>
+
+<line x1="238" y1="690" x2="425" y2="690" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="331" y="685" text-anchor="middle" fill="#FF6B9D">23. UPDATE status=COMPLETED, isOnTrip=false, actualArrival</text>
 </g>
 </svg>
 
-<!-- 3c: Large long (quotation flow) -->
-<svg class="seq-flow" id="seq-s3c" width="1500" height="800" viewBox="0 0 1500 800">
-<rect width="1500" height="800" fill="#0e1512" rx="12"/>
-<text x="750" y="30" fill="#b86b2f" font-size="14" font-weight="700">③ Large package long distance — quotation, approval, then schedule</text>
+<!-- ③ PARCEL DELIVERY -->
+<svg class="seq-flow" id="seq-s3" width="1350" height="840" viewBox="0 0 1350 840">
+<rect width="1350" height="840" fill="#0e1512" rx="12"/>
+<text x="675" y="28" text-anchor="middle" font-size="13" fill="#FFB347" font-weight="700" font-family="Syne,sans-serif">③ Parcel Delivery — Full Lifecycle</text>
 <g font-family="JetBrains Mono,monospace">
-<rect x="20" y="50" width="90" height="26" fill="rgba(0,201,167,.15)" stroke="#00C9A7"/><text x="65" y="70" fill="#00C9A7">CLIENT</text>
-<rect x="150" y="50" width="100" height="26" fill="rgba(74,158,255,.15)" stroke="#4A9EFF"/><text x="200" y="70" fill="#4A9EFF">SYSTEM</text>
-<rect x="290" y="50" width="100" height="26" fill="rgba(184,107,47,.15)" stroke="#b86b2f"/><text x="340" y="70" fill="#b86b2f">QUOTE SVC</text>
-<rect x="430" y="50" width="100" height="26" fill="rgba(255,215,0,.15)" stroke="#FFD700"/><text x="480" y="70" fill="#FFD700">ADMIN</text>
-<rect x="570" y="50" width="110" height="26" fill="rgba(184,107,47,.1)" stroke="#b86b2f"/><text x="625" y="70" fill="#b86b2f">SPECIAL VEH</text>
-<rect x="720" y="50" width="100" height="26" fill="rgba(255,107,157,.15)" stroke="#FF6B9D"/><text x="770" y="70" fill="#FF6B9D">DB</text>
-<line x1="65" y1="76" x2="65" y2="750" stroke="#00C9A7" stroke-dasharray="4,4"/>
-<line x1="200" y1="76" x2="200" y2="750" stroke="#4A9EFF" stroke-dasharray="4,4"/>
-<line x1="340" y1="76" x2="340" y2="750" stroke="#b86b2f" stroke-dasharray="4,4"/>
-<line x1="480" y1="76" x2="480" y2="750" stroke="#FFD700" stroke-dasharray="4,4"/>
-<line x1="625" y1="76" x2="625" y2="750" stroke="#b86b2f" stroke-dasharray="4,4"/>
-<line x1="770" y1="76" x2="770" y2="750" stroke="#FF6B9D" stroke-dasharray="4,4"/>
+  <rect x="30"  y="46" width="90"  height="28" rx="4" fill="rgba(0,201,167,.15)"   stroke="#00C9A7" stroke-width="1.2"/><text x="75"  y="65" text-anchor="middle" font-size="8.5" fill="#00C9A7" font-weight="700">CLIENT</text>
+  <rect x="185" y="46" width="100" height="28" rx="4" fill="rgba(74,158,255,.15)"  stroke="#4A9EFF" stroke-width="1.2"/><text x="235" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">SYSTEM/API</text>
+  <rect x="355" y="46" width="100" height="28" rx="4" fill="rgba(116,198,157,.15)" stroke="#74C69D" stroke-width="1.2"/><text x="405" y="65" text-anchor="middle" font-size="8.5" fill="#74C69D" font-weight="700">MAP LOCATOR</text>
+  <rect x="525" y="46" width="100" height="28" rx="4" fill="rgba(255,107,157,.15)" stroke="#FF6B9D" stroke-width="1.2"/><text x="575" y="65" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">DATABASE</text>
+  <rect x="695" y="46" width="90"  height="28" rx="4" fill="rgba(255,179,71,.15)"  stroke="#FFB347" stroke-width="1.2"/><text x="740" y="65" text-anchor="middle" font-size="8.5" fill="#FFB347" font-weight="700">AGENT</text>
+  <rect x="855" y="46" width="110" height="28" rx="4" fill="rgba(74,158,255,.1)"   stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="910" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">NOTIFICATIONS</text>
+</g>
+<line x1="75"  y1="74" x2="75"  y2="810" stroke="#00C9A7" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="235" y1="74" x2="235" y2="810" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="405" y1="74" x2="405" y2="810" stroke="#74C69D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="575" y1="74" x2="575" y2="810" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="740" y1="74" x2="740" y2="810" stroke="#FFB347" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="910" y1="74" x2="910" y2="810" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
 
-<line x1="53" y1="114" x2="194" y2="114" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="123" y="109" fill="#00C9A7">1. requestLargeLong(removal/livestock, pickup/dropoff long distance)</text>
-<line x1="200" y1="136" x2="770" y2="136" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="485" y="131" fill="#FF6B9D">2. create Delivery(package=LARGE, distance=LONG, pricingModel=QUOTE)</text>
-<line x1="200" y1="158" x2="340" y2="158" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="270" y="153" fill="#b86b2f">3. request quote (details)</text>
-<line x1="340" y1="180" x2="480" y2="180" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="410" y="175" fill="#b86b2f">4. admin notification</text>
-<rect x="464" y="192" width="34" height="20" fill="rgba(255,215,0,.12)"/>
-<line x1="480" y1="202" x2="347" y2="202" stroke="#FFD700" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="413" y="197" fill="#FFD700">5. admin sets price</text>
-<line x1="340" y1="224" x2="770" y2="224" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="555" y="219" fill="#FF6B9D">6. INSERT Quotation (PRICED, price, validUntil)</text>
-<line x1="340" y1="246" x2="207" y2="246" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="273" y="241" fill="#b86b2f">7. quote notification to client</text>
-<rect x="49" y="258" width="34" height="20" fill="rgba(0,201,167,.12)"/>
-<line x1="65" y1="268" x2="194" y2="268" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="129" y="263" fill="#00C9A7">8. accept quote</text>
-<line x1="200" y1="290" x2="770" y2="290" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="485" y="285" fill="#FF6B9D">9. update Quotation status=ACCEPTED, Delivery pricingModel=QUOTE_ACCEPTED</text>
-<line x1="200" y1="312" x2="625" y2="312" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="412" y="307" fill="#b86b2f">10. schedule special vehicle</text>
-<line x1="625" y1="334" x2="770" y2="334" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="697" y="329" fill="#FF6B9D">11. assign vehicle, status=ASSIGNED</text>
-<line x1="625" y1="356" x2="65" y2="356" stroke="#b86b2f" stroke-width="1.5" marker-end="url(#a0)"/>
-<text x="345" y="351" fill="#b86b2f">12. door pickup & direct long-haul</text>
+<g font-family="JetBrains Mono,monospace" font-size="8.5">
+<rect x="49" y="100" width="14" height="580" rx="2" fill="rgba(0,201,167,.12)"/>
+<rect x="209" y="114" width="14" height="580" rx="2" fill="rgba(74,158,255,.12)"/>
+
+<line x1="63" y1="114" x2="209" y2="114" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
+<text x="142" y="109" text-anchor="middle" fill="#00C9A7">1. placeDeliveryOrder(pickup, dropoff, parcelInfo)</text>
+
+<line x1="235" y1="136" x2="405" y2="136" stroke="#74C69D" stroke-width="1.5" marker-end="url(#se)"/>
+<text x="320" y="131" text-anchor="middle" fill="#74C69D">2. queryPOIs(address, APPROVED)</text>
+
+<line x1="405" y1="156" x2="249" y2="156" stroke="#74C69D" stroke-width="1" marker-end="url(#se)" stroke-dasharray="4,3"/>
+<text x="327" y="151" text-anchor="middle" fill="#74C69D" opacity=".7">3. [address suggestions]</text>
+
+<line x1="235" y1="178" x2="575" y2="178" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="405" y="173" text-anchor="middle" fill="#FF6B9D">4. INSERT Delivery(status=PENDING, agentId=NULL)</text>
+
+<line x1="235" y1="200" x2="575" y2="200" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="405" y="195" text-anchor="middle" fill="#FF6B9D">5. INSERT DeliveryEvent(CREATED, location)</text>
+
+<rect x="209" y="212" width="530" height="80" rx="4" fill="none" stroke="rgba(255,179,71,.2)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="219" y="226" font-size="7.5" fill="#6a4820">loop  [broadcast to available agents in city]</text>
+<line x1="235" y1="240" x2="910" y2="240" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="572" y="235" text-anchor="middle" fill="#4A9EFF">6. PUSH: new delivery order → Agent</text>
+<rect x="714" y="252" width="54" height="20" rx="3" fill="rgba(255,179,71,.12)"/>
+<line x1="740" y1="262" x2="249" y2="262" stroke="#FFB347" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="494" y="257" text-anchor="middle" fill="#FFB347">7. respondToDelivery(deliveryId, accept|reject)</text>
+
+<!-- alt accept/reject -->
+<rect x="209" y="295" width="530" height="68" rx="4" fill="none" stroke="rgba(255,179,71,.18)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="219" y="309" font-size="7.5" fill="#6a4820">alt  [agent accepts]</text>
+<line x1="235" y1="321" x2="575" y2="321" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="405" y="316" text-anchor="middle" fill="#FF6B9D">8a. UPDATE agentId=agent, status=ASSIGNED</text>
+<text x="219" y="339" font-size="7.5" fill="#6a4820">else  [reject — re-broadcast to next agent]</text>
+<line x1="235" y1="351" x2="910" y2="351" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sb)" stroke-dasharray="3,3"/>
+<text x="572" y="346" text-anchor="middle" fill="#4A9EFF" opacity=".7">8b. PUSH next agent</text>
+
+<rect x="714" y="367" width="54" height="20" rx="3" fill="rgba(255,179,71,.12)"/>
+<line x1="740" y1="377" x2="249" y2="377" stroke="#FFB347" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="494" y="372" text-anchor="middle" fill="#FFB347">9. confirmPickup(deliveryId, currentLocation)</text>
+
+<line x1="235" y1="399" x2="575" y2="399" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="405" y="394" text-anchor="middle" fill="#FF6B9D">10. UPDATE status=PICKED_UP; stamp pickupTime</text>
+
+<line x1="235" y1="421" x2="575" y2="421" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="405" y="416" text-anchor="middle" fill="#FF6B9D">11. INSERT DeliveryEvent(PICKUP_CONFIRMED)</text>
+
+<line x1="235" y1="445" x2="910" y2="445" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="572" y="440" text-anchor="middle" fill="#4A9EFF">12. PUSH: "package picked up" → Client</text>
+
+<line x1="740" y1="469" x2="249" y2="469" stroke="#FFB347" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="494" y="464" text-anchor="middle" fill="#FFB347">13. streamLocationUpdates(lat, lng) [periodic]</text>
+
+<line x1="235" y1="491" x2="575" y2="491" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="405" y="486" text-anchor="middle" fill="#FF6B9D">14. INSERT DeliveryEvent(IN_TRANSIT, coords)</text>
+
+<line x1="235" y1="513" x2="63" y2="513" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sa)" stroke-dasharray="4,3"/>
+<text x="149" y="508" text-anchor="middle" fill="#4A9EFF" opacity=".7">15. [live tracking stream → Client]</text>
+
+<rect x="714" y="525" width="54" height="20" rx="3" fill="rgba(255,179,71,.12)"/>
+<line x1="740" y1="535" x2="249" y2="535" stroke="#FFB347" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="494" y="530" text-anchor="middle" fill="#FFB347">16. confirmDelivery(photo, signature, recipientName)</text>
+
+<line x1="235" y1="557" x2="575" y2="557" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="405" y="552" text-anchor="middle" fill="#FF6B9D">17. INSERT DeliveryPhoto(PROOF) + INSERT DeliverySignature</text>
+
+<line x1="235" y1="579" x2="575" y2="579" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="405" y="574" text-anchor="middle" fill="#FF6B9D">18. UPDATE status=DELIVERED; actualDeliveryTime</text>
+
+<line x1="235" y1="601" x2="575" y2="601" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="405" y="596" text-anchor="middle" fill="#FF6B9D">19. UPDATE paymentStatus=PAID; INSERT DeliveryEvent(DELIVERED)</text>
+
+<line x1="235" y1="623" x2="910" y2="623" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="572" y="618" text-anchor="middle" fill="#4A9EFF">20. PUSH: "delivery confirmed" → Client + Agent</text>
+
+<line x1="235" y1="647" x2="63" y2="647" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sa)" stroke-dasharray="4,3"/>
+<text x="149" y="642" text-anchor="middle" fill="#4A9EFF" opacity=".7">21. [delivery complete screen + receipt]</text>
 </g>
 </svg>
+
+<!-- ④ CAPACITY & WAITLIST -->
+<svg class="seq-flow" id="seq-s4" width="1150" height="680" viewBox="0 0 1150 680">
+<rect width="1150" height="680" fill="#0e1512" rx="12"/>
+<text x="575" y="28" text-anchor="middle" font-size="13" fill="#FFD700" font-weight="700" font-family="Syne,sans-serif">④ City Capacity Check &amp; Driver Waitlist</text>
+<g font-family="JetBrains Mono,monospace">
+  <rect x="30"  y="46" width="100" height="28" rx="4" fill="rgba(77,157,224,.15)"  stroke="#4D9DE0" stroke-width="1.2"/><text x="80"  y="65" text-anchor="middle" font-size="8.5" fill="#4D9DE0" font-weight="700">DRIVER</text>
+  <rect x="200" y="46" width="100" height="28" rx="4" fill="rgba(74,158,255,.15)"  stroke="#4A9EFF" stroke-width="1.2"/><text x="250" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">SYSTEM/API</text>
+  <rect x="370" y="46" width="110" height="28" rx="4" fill="rgba(255,215,0,.15)"   stroke="#FFD700" stroke-width="1.2"/><text x="425" y="65" text-anchor="middle" font-size="8.5" fill="#FFD700" font-weight="700">CAPACITY SVC</text>
+  <rect x="550" y="46" width="100" height="28" rx="4" fill="rgba(255,107,157,.15)" stroke="#FF6B9D" stroke-width="1.2"/><text x="600" y="65" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">DATABASE</text>
+  <rect x="720" y="46" width="110" height="28" rx="4" fill="rgba(74,158,255,.1)"   stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="775" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">NOTIFICATIONS</text>
+</g>
+<line x1="80"  y1="74" x2="80"  y2="650" stroke="#4D9DE0" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="250" y1="74" x2="250" y2="650" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="425" y1="74" x2="425" y2="650" stroke="#FFD700" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="600" y1="74" x2="600" y2="650" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="775" y1="74" x2="775" y2="650" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+
+<g font-family="JetBrains Mono,monospace" font-size="8.5">
+<rect x="54" y="100" width="14" height="440" rx="2" fill="rgba(77,157,224,.12)"/>
+
+<line x1="68" y1="114" x2="224" y2="114" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="156" y="109" text-anchor="middle" fill="#4D9DE0">1. selectCity(cityId)</text>
+
+<line x1="250" y1="136" x2="425" y2="136" stroke="#FFD700" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="337" y="131" text-anchor="middle" fill="#FFD700">2. checkCapacity(cityId, serviceType)</text>
+
+<line x1="425" y1="158" x2="600" y2="158" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="512" y="153" text-anchor="middle" fill="#FF6B9D">3. SELECT COUNT drivers WHERE city+status=ONLINE</text>
+
+<line x1="600" y1="178" x2="432" y2="178" stroke="#FF6B9D" stroke-width="1" marker-end="url(#sg)" stroke-dasharray="4,3"/>
+<text x="516" y="173" text-anchor="middle" fill="#FF6B9D" opacity=".7">4. [activeCount, maxActive returned]</text>
+
+<rect x="225" y="190" width="410" height="76" rx="4" fill="none" stroke="rgba(255,215,0,.2)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="235" y="204" font-size="7.5" fill="#6a6020">alt  [activeCount &lt; maxActive]</text>
+<line x1="425" y1="216" x2="264" y2="216" stroke="#FFD700" stroke-width="1" marker-end="url(#sg)" stroke-dasharray="4,3"/>
+<text x="344" y="211" text-anchor="middle" fill="#FFD700" opacity=".75">5a. [OK — allow goOnline()]</text>
+<text x="235" y="232" font-size="7.5" fill="#6a6020">else  [city full]</text>
+<line x1="250" y1="244" x2="600" y2="244" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="425" y="239" text-anchor="middle" fill="#FF6B9D">5b. INSERT DriverWaitlist(WAITING, priorityScore)</text>
+<line x1="250" y1="268" x2="68" y2="268" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="159" y="263" text-anchor="middle" fill="#4A9EFF" opacity=".75">6. [show "X drivers ahead of you" screen]</text>
+
+<rect x="225" y="280" width="410" height="54" rx="4" fill="none" stroke="rgba(0,201,167,.2)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="235" y="294" font-size="7.5" fill="#2a6048">event  [another driver goes OFFLINE / leaves city]</text>
+<line x1="425" y1="308" x2="600" y2="308" stroke="#FFD700" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="512" y="303" text-anchor="middle" fill="#FFD700">7. SELECT top waitlist entry (ORDER BY priorityScore)</text>
+
+<line x1="425" y1="330" x2="600" y2="330" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="512" y="325" text-anchor="middle" fill="#FF6B9D">8. UPDATE DriverWaitlist: status=PROMOTED, promotedAt, notifiedAt</text>
+
+<line x1="250" y1="352" x2="775" y2="352" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="512" y="347" text-anchor="middle" fill="#4A9EFF">9. PUSH: "[City] spot now available — tap to activate"</text>
+
+<line x1="775" y1="374" x2="68" y2="374" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="421" y="369" text-anchor="middle" fill="#4A9EFF" opacity=".75">10. [notification received by Driver]</text>
+
+<rect x="54" y="386" width="54" height="20" rx="3" fill="rgba(77,157,224,.12)"/>
+<line x1="68" y1="396" x2="224" y2="396" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="156" y="391" text-anchor="middle" fill="#4D9DE0">11. confirmSlot() ["Slide to Change Location"]</text>
+
+<line x1="250" y1="418" x2="600" y2="418" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="425" y="413" text-anchor="middle" fill="#FF6B9D">12. UPDATE Driver.workStatus=ONLINE, currentCityId</text>
+
+<line x1="250" y1="440" x2="68" y2="440" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="159" y="435" text-anchor="middle" fill="#4A9EFF" opacity=".75">13. [map screen, now receiving ride requests]</text>
+</g>
+</svg>
+
+<!-- ⑤ REWARDS & WALLET -->
+<svg class="seq-flow" id="seq-s5" width="1280" height="760" viewBox="0 0 1280 760">
+<rect width="1280" height="760" fill="#0e1512" rx="12"/>
+<text x="640" y="28" text-anchor="middle" font-size="13" fill="#FFA500" font-weight="700" font-family="Syne,sans-serif">⑤ Rewards Accrual, Referral &amp; Wallet Quick Transfer</text>
+<g font-family="JetBrains Mono,monospace">
+  <rect x="25"  y="46" width="90"  height="28" rx="4" fill="rgba(0,201,167,.15)"   stroke="#00C9A7" stroke-width="1.2"/><text x="70"  y="65" text-anchor="middle" font-size="8.5" fill="#00C9A7" font-weight="700">CLIENT A</text>
+  <rect x="180" y="46" width="100" height="28" rx="4" fill="rgba(74,158,255,.15)"  stroke="#4A9EFF" stroke-width="1.2"/><text x="230" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">SYSTEM/API</text>
+  <rect x="350" y="46" width="100" height="28" rx="4" fill="rgba(255,107,157,.15)" stroke="#FF6B9D" stroke-width="1.2"/><text x="400" y="65" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">DATABASE</text>
+  <rect x="520" y="46" width="100" height="28" rx="4" fill="rgba(255,165,0,.15)"   stroke="#FFA500" stroke-width="1.2"/><text x="570" y="65" text-anchor="middle" font-size="8.5" fill="#FFA500" font-weight="700">REWARDS SVC</text>
+  <rect x="690" y="46" width="100" height="28" rx="4" fill="rgba(255,165,0,.1)"    stroke="#FFA500" stroke-width="1"/><text x="740" y="65" text-anchor="middle" font-size="8.5" fill="#FFA500" font-weight="700">WALLET SVC</text>
+  <rect x="860" y="46" width="90"  height="28" rx="4" fill="rgba(0,201,167,.1)"    stroke="#00C9A7" stroke-width="1" stroke-dasharray="4,3"/><text x="905" y="65" text-anchor="middle" font-size="8.5" fill="#00C9A7" font-weight="700">CLIENT B</text>
+  <rect x="1010" y="46" width="110" height="28" rx="4" fill="rgba(74,158,255,.1)"  stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="1065" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">NOTIFICATIONS</text>
+</g>
+<line x1="70"   y1="74" x2="70"   y2="730" stroke="#00C9A7" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="230"  y1="74" x2="230"  y2="730" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="400"  y1="74" x2="400"  y2="730" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="570"  y1="74" x2="570"  y2="730" stroke="#FFA500" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="740"  y1="74" x2="740"  y2="730" stroke="#FFA500" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+<line x1="905"  y1="74" x2="905"  y2="730" stroke="#00C9A7" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+<line x1="1065" y1="74" x2="1065" y2="730" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+
+<g font-family="JetBrains Mono,monospace" font-size="8.5">
+<text x="25" y="105" fill="#2a5048" font-size="8">─── Referral Signup ───</text>
+<rect x="44" y="108" width="54" height="20" rx="3" fill="rgba(0,201,167,.12)"/>
+<line x1="58" y1="118" x2="224" y2="118" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
+<text x="141" y="113" text-anchor="middle" fill="#00C9A7">1. shareReferralCode(code)</text>
+
+<line x1="905" y1="140" x2="244" y2="140" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
+<text x="574" y="135" text-anchor="middle" fill="#00C9A7">2. register(referralCode=A.code) — Client B</text>
+
+<line x1="230" y1="162" x2="570" y2="162" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sf)"/>
+<text x="400" y="157" text-anchor="middle" fill="#FFA500">3. onReferralSignup(clientA, clientB)</text>
+
+<line x1="570" y1="184" x2="407" y2="184" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="488" y="179" text-anchor="middle" fill="#FFA500">4. INSERT RewardActivity(REFERRAL_SIGNUP, +partialPts) for A</text>
+
+<line x1="570" y1="206" x2="407" y2="206" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="488" y="201" text-anchor="middle" fill="#FFA500">5. UPDATE Client A.rewardPoints += partialPts</text>
+
+<line x1="905" y1="228" x2="244" y2="228" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
+<text x="574" y="223" text-anchor="middle" fill="#00C9A7">6. [Client B completes first trip]</text>
+
+<line x1="230" y1="250" x2="570" y2="250" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sf)"/>
+<text x="400" y="245" text-anchor="middle" fill="#FFA500">7. onReferralTripCompleted(clientA)</text>
+
+<line x1="570" y1="272" x2="407" y2="272" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="488" y="267" text-anchor="middle" fill="#FFA500">8. INSERT RewardActivity(REFERRAL_TRIP_COMPLETED, +remainingPts)</text>
+
+<text x="25" y="296" fill="#2a5048" font-size="8">─── Trip Completion Points ───</text>
+
+<line x1="230" y1="310" x2="570" y2="310" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sf)"/>
+<text x="400" y="305" text-anchor="middle" fill="#FFA500">9. onTripCompleted(clientId, tripId)</text>
+
+<line x1="570" y1="332" x2="407" y2="332" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="488" y="327" text-anchor="middle" fill="#FFA500">10. INSERT RewardActivity(TRIP_COMPLETED, +delta) + UPDATE rewardPoints</text>
+
+<line x1="230" y1="354" x2="1065" y2="354" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="647" y="349" text-anchor="middle" fill="#4A9EFF">11. PUSH: "You earned X points!" → Client A</text>
+
+<text x="25" y="378" fill="#2a5048" font-size="8">─── Wallet Quick Transfer ───</text>
+
+<rect x="44" y="382" width="54" height="20" rx="3" fill="rgba(0,201,167,.12)"/>
+<line x1="58" y1="392" x2="224" y2="392" stroke="#00C9A7" stroke-width="1.5" marker-end="url(#sa)"/>
+<text x="141" y="387" text-anchor="middle" fill="#00C9A7">12. initiateTransfer(recipientId, amount)</text>
+
+<line x1="230" y1="414" x2="740" y2="414" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sf)"/>
+<text x="485" y="409" text-anchor="middle" fill="#FFA500">13. validateWalletPassword(walletId, hashedPwd)</text>
+
+<line x1="740" y1="436" x2="244" y2="436" stroke="#FFA500" stroke-width="1" marker-end="url(#sa)" stroke-dasharray="4,3"/>
+<text x="492" y="431" text-anchor="middle" fill="#FFA500" opacity=".75">14. [password OK — proceed]</text>
+
+<line x1="230" y1="458" x2="740" y2="458" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sf)"/>
+<text x="485" y="453" text-anchor="middle" fill="#FFA500">15. executeTransfer(fromWallet, toWallet, amount)</text>
+
+<line x1="740" y1="480" x2="407" y2="480" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="573" y="475" text-anchor="middle" fill="#FFA500">16. DEBIT A.wallet; CREDIT B.wallet (atomic)</text>
+
+<line x1="740" y1="502" x2="407" y2="502" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="573" y="497" text-anchor="middle" fill="#FFA500">17. INSERT WalletTransaction × 2 (balanceAfter each)</text>
+
+<line x1="230" y1="524" x2="58" y2="524" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sa)" stroke-dasharray="4,3"/>
+<text x="144" y="519" text-anchor="middle" fill="#4A9EFF" opacity=".75">18. [transfer confirmed + new balance]</text>
+
+<line x1="230" y1="546" x2="1065" y2="546" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="647" y="541" text-anchor="middle" fill="#4A9EFF">19. PUSH: "X received from [A]" → Client B</text>
+</g>
+</svg>
+
+<!-- ⑥ DOC VERIFICATION -->
+<svg class="seq-flow" id="seq-s6" width="1200" height="700" viewBox="0 0 1200 700">
+<rect width="1200" height="700" fill="#0e1512" rx="12"/>
+<text x="600" y="28" text-anchor="middle" font-size="13" fill="#FFD700" font-weight="700" font-family="Syne,sans-serif">⑥ Driver Document Verification &amp; Expiry Lifecycle</text>
+<g font-family="JetBrains Mono,monospace">
+  <rect x="25"  y="46" width="100" height="28" rx="4" fill="rgba(77,157,224,.15)"  stroke="#4D9DE0" stroke-width="1.2"/><text x="75"  y="65" text-anchor="middle" font-size="8.5" fill="#4D9DE0" font-weight="700">DRIVER</text>
+  <rect x="195" y="46" width="100" height="28" rx="4" fill="rgba(74,158,255,.15)"  stroke="#4A9EFF" stroke-width="1.2"/><text x="245" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">SYSTEM/API</text>
+  <rect x="365" y="46" width="100" height="28" rx="4" fill="rgba(255,107,157,.15)" stroke="#FF6B9D" stroke-width="1.2"/><text x="415" y="65" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">DATABASE</text>
+  <rect x="535" y="46" width="100" height="28" rx="4" fill="rgba(255,215,0,.12)"   stroke="#FFD700" stroke-width="1.2"/><text x="585" y="65" text-anchor="middle" font-size="8.5" fill="#FFD700" font-weight="700">ADMIN</text>
+  <rect x="705" y="46" width="110" height="28" rx="4" fill="rgba(74,158,255,.1)"   stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="760" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">NOTIFICATIONS</text>
+  <rect x="880" y="46" width="110" height="28" rx="4" fill="rgba(255,165,0,.1)"    stroke="#FFA500" stroke-width="1" stroke-dasharray="4,3"/><text x="935" y="65" text-anchor="middle" font-size="8.5" fill="#FFA500" font-weight="700">EXPIRY CRON</text>
+</g>
+<line x1="75"  y1="74" x2="75"  y2="670" stroke="#4D9DE0" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="245" y1="74" x2="245" y2="670" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="415" y1="74" x2="415" y2="670" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="585" y1="74" x2="585" y2="670" stroke="#FFD700" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="760" y1="74" x2="760" y2="670" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+<line x1="935" y1="74" x2="935" y2="670" stroke="#FFA500" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+
+<g font-family="JetBrains Mono,monospace" font-size="8.5">
+<rect x="49" y="100" width="14" height="440" rx="2" fill="rgba(77,157,224,.12)"/>
+
+<line x1="63" y1="114" x2="219" y2="114" stroke="#4D9DE0" stroke-width="1.5" marker-end="url(#sc)"/>
+<text x="141" y="109" text-anchor="middle" fill="#4D9DE0">1. submitDocuments(nationalId, licence, vehicle, expiresAt)</text>
+
+<line x1="245" y1="136" x2="415" y2="136" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="330" y="131" text-anchor="middle" fill="#FF6B9D">2. INSERT Document×N (status=PENDING, ownerType, expiresAt)</text>
+
+<line x1="245" y1="158" x2="760" y2="158" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="502" y="153" text-anchor="middle" fill="#4A9EFF">3. PUSH: "new documents to review" → Admin panel</text>
+
+<rect x="559" y="170" width="54" height="20" rx="3" fill="rgba(255,215,0,.12)"/>
+<line x1="585" y1="180" x2="259" y2="180" stroke="#FFD700" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="422" y="175" text-anchor="middle" fill="#FFD700">4. reviewDocument(docId) — Admin</text>
+
+<line x1="245" y1="202" x2="415" y2="202" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="330" y="197" text-anchor="middle" fill="#FF6B9D">5. SELECT Document WHERE status=PENDING</text>
+
+<rect x="220" y="214" width="410" height="68" rx="4" fill="none" stroke="rgba(255,215,0,.2)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="230" y="228" font-size="7.5" fill="#6a6020">alt  [approved]</text>
+<line x1="585" y1="240" x2="422" y2="240" stroke="#FFD700" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="503" y="235" text-anchor="middle" fill="#FFD700">6a. UPDATE status=APPROVED, verifiedAt, verifiedById</text>
+<text x="230" y="256" font-size="7.5" fill="#6a6020">else  [rejected]</text>
+<line x1="585" y1="268" x2="422" y2="268" stroke="#FFD700" stroke-width="1" marker-end="url(#sg)" stroke-dasharray="4,3"/>
+<text x="503" y="263" text-anchor="middle" fill="#FFD700" opacity=".75">6b. UPDATE status=REJECTED, rejectionReason</text>
+
+<line x1="245" y1="290" x2="760" y2="290" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="502" y="285" text-anchor="middle" fill="#4A9EFF">7. PUSH: "document [approved/rejected]" → Driver</text>
+
+<line x1="245" y1="312" x2="63" y2="312" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="154" y="307" text-anchor="middle" fill="#4A9EFF" opacity=".75">8. [docs approved — driver unblocked to go online]</text>
+
+<text x="25" y="334" fill="#2a5048" font-size="8">─── Expiry Cron (scheduled job) ───</text>
+
+<line x1="935" y1="348" x2="259" y2="348" stroke="#FFA500" stroke-width="1.5" marker-end="url(#sf)"/>
+<text x="597" y="343" text-anchor="middle" fill="#FFA500">9. cronCheckExpiry() [daily job]</text>
+
+<line x1="245" y1="370" x2="415" y2="370" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="330" y="365" text-anchor="middle" fill="#FF6B9D">10. SELECT Documents WHERE expiresAt &lt;= NOW + 30days AND status=APPROVED</text>
+
+<line x1="415" y1="390" x2="259" y2="390" stroke="#FF6B9D" stroke-width="1" marker-end="url(#sb)" stroke-dasharray="4,3"/>
+<text x="337" y="385" text-anchor="middle" fill="#FF6B9D" opacity=".7">11. [expiring/expired documents]</text>
+
+<line x1="245" y1="412" x2="415" y2="412" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="330" y="407" text-anchor="middle" fill="#FF6B9D">12. UPDATE status=EXPIRED (for past-due docs)</text>
+
+<line x1="245" y1="434" x2="760" y2="434" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="502" y="429" text-anchor="middle" fill="#4A9EFF">13. PUSH: "Document expiring soon / expired" → Driver</text>
+
+<line x1="245" y1="456" x2="63" y2="456" stroke="#4A9EFF" stroke-width="1" marker-end="url(#sc)" stroke-dasharray="4,3"/>
+<text x="154" y="451" text-anchor="middle" fill="#4A9EFF" opacity=".75">14. [Driver BLOCKED from going ONLINE]</text>
+</g>
+</svg>
+
+<!-- ⑦ BUS OPERATIONS -->
+<svg class="seq-flow" id="seq-s7" width="1380" height="820" viewBox="0 0 1380 820">
+<rect width="1380" height="820" fill="#0e1512" rx="12"/>
+<text x="690" y="28" text-anchor="middle" font-size="13" fill="#B48AE8" font-weight="700" font-family="Syne,sans-serif">⑦ Bus Operations — Onboarding → Trip → Seat Booking → Cargo</text>
+<g font-family="JetBrains Mono,monospace">
+  <rect x="20"  y="46" width="100" height="28" rx="4" fill="rgba(180,138,232,.15)" stroke="#B48AE8" stroke-width="1.2"/><text x="70"  y="65" text-anchor="middle" font-size="8.5" fill="#B48AE8" font-weight="700">BUS EMPLOYEE</text>
+  <rect x="190" y="46" width="100" height="28" rx="4" fill="rgba(74,158,255,.15)"  stroke="#4A9EFF" stroke-width="1.2"/><text x="240" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">SYSTEM/API</text>
+  <rect x="360" y="46" width="100" height="28" rx="4" fill="rgba(255,107,157,.15)" stroke="#FF6B9D" stroke-width="1.2"/><text x="410" y="65" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-weight="700">DATABASE</text>
+  <rect x="530" y="46" width="100" height="28" rx="4" fill="rgba(255,215,0,.12)"   stroke="#FFD700" stroke-width="1.2"/><text x="580" y="65" text-anchor="middle" font-size="8.5" fill="#FFD700" font-weight="700">ADMIN</text>
+  <rect x="700" y="46" width="110" height="28" rx="4" fill="rgba(116,198,157,.1)"  stroke="#74C69D" stroke-width="1"/><text x="755" y="65" text-anchor="middle" font-size="8.5" fill="#74C69D" font-weight="700">MAP LOCATOR</text>
+  <rect x="880" y="46" width="100" height="28" rx="4" fill="rgba(74,158,255,.1)"   stroke="#4A9EFF" stroke-width="1" stroke-dasharray="4,3"/><text x="930" y="65" text-anchor="middle" font-size="8.5" fill="#4A9EFF" font-weight="700">PASSENGER</text>
+</g>
+<line x1="70"  y1="74" x2="70"  y2="790" stroke="#B48AE8" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="240" y1="74" x2="240" y2="790" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="410" y1="74" x2="410" y2="790" stroke="#FF6B9D" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="580" y1="74" x2="580" y2="790" stroke="#FFD700" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+<line x1="755" y1="74" x2="755" y2="790" stroke="#74C69D" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+<line x1="930" y1="74" x2="930" y2="790" stroke="#4A9EFF" stroke-width="1" stroke-dasharray="5,4" opacity=".25"/>
+
+<g font-family="JetBrains Mono,monospace" font-size="8.5">
+<text x="20" y="106" fill="#3a2860" font-size="8">─── Onboarding Wizard ───</text>
+<rect x="44" y="109" width="54" height="20" rx="3" fill="rgba(180,138,232,.12)"/>
+<line x1="58" y1="119" x2="214" y2="119" stroke="#B48AE8" stroke-width="1.5" marker-end="url(#ce)"/>
+<text x="136" y="114" text-anchor="middle" fill="#B48AE8">1. startOnboarding(stationId)</text>
+
+<line x1="240" y1="141" x2="755" y2="141" stroke="#74C69D" stroke-width="1.5" marker-end="url(#se)"/>
+<text x="497" y="136" text-anchor="middle" fill="#74C69D">2. queryPOI(stationCoords, APPROVED)</text>
+
+<line x1="755" y1="161" x2="257" y2="161" stroke="#74C69D" stroke-width="1" marker-end="url(#se)" stroke-dasharray="4,3"/>
+<text x="506" y="156" text-anchor="middle" fill="#74C69D" opacity=".75">3. [station POI data for enrichment]</text>
+
+<line x1="58" y1="183" x2="214" y2="183" stroke="#B48AE8" stroke-width="1.5" marker-end="url(#ce)"/>
+<text x="136" y="178" text-anchor="middle" fill="#B48AE8">4. createBusStandard(route, standard info)</text>
+
+<line x1="240" y1="205" x2="410" y2="205" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="200" text-anchor="middle" fill="#FF6B9D">5. INSERT BusStandard → BusSeatClass → BusSeat (wizard)</text>
+
+<line x1="58" y1="227" x2="214" y2="227" stroke="#B48AE8" stroke-width="1.5" marker-end="url(#ce)"/>
+<text x="136" y="222" text-anchor="middle" fill="#B48AE8">6. registerBus(plateNumber, capacity, vehicleClass)</text>
+
+<line x1="240" y1="249" x2="410" y2="249" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="244" text-anchor="middle" fill="#FF6B9D">7. INSERT Bus(busEmployeeId, busStandardId, seats)</text>
+
+<text x="20" y="270" fill="#3a2860" font-size="8">─── Verification (Admin) ───</text>
+<line x1="580" y1="284" x2="257" y2="284" stroke="#FFD700" stroke-width="1.5" marker-end="url(#sg)"/>
+<text x="418" y="279" text-anchor="middle" fill="#FFD700">8. approveBusEmployee(empId) — Admin</text>
+
+<line x1="240" y1="306" x2="410" y2="306" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="301" text-anchor="middle" fill="#FF6B9D">9. UPDATE BusEmployee.verificationStatus=APPROVED</text>
+
+<text x="20" y="327" fill="#3a2860" font-size="8">─── Schedule Trip ───</text>
+<rect x="44" y="330" width="54" height="20" rx="3" fill="rgba(180,138,232,.12)"/>
+<line x1="58" y1="340" x2="214" y2="340" stroke="#B48AE8" stroke-width="1.5" marker-end="url(#ce)"/>
+<text x="136" y="335" text-anchor="middle" fill="#B48AE8">10. scheduleTrip(from, to, departure, price)</text>
+
+<line x1="240" y1="362" x2="410" y2="362" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="357" text-anchor="middle" fill="#FF6B9D">11. INSERT BusTrip(status=SCHEDULED, availableSeats=totalSeats)</text>
+
+<text x="20" y="383" fill="#3a2860" font-size="8">─── Seat Booking ───</text>
+<line x1="930" y1="397" x2="257" y2="397" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="593" y="392" text-anchor="middle" fill="#4A9EFF">12. bookSeat(busTripId, busSeatId)</text>
+
+<line x1="240" y1="419" x2="410" y2="419" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="414" text-anchor="middle" fill="#FF6B9D">13. CHECK @@unique(busTripId, busSeatId) — prevent double-booking</text>
+
+<line x1="240" y1="441" x2="410" y2="441" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="436" text-anchor="middle" fill="#FF6B9D">14. INSERT BusSeatBooking + UPDATE BusTrip.availableSeats -= 1</text>
+
+<line x1="240" y1="463" x2="930" y2="463" stroke="#4A9EFF" stroke-width="1.5" marker-end="url(#sb)"/>
+<text x="585" y="458" text-anchor="middle" fill="#4A9EFF">15. [booking confirmed + QR ticket]</text>
+
+<text x="20" y="484" fill="#3a2860" font-size="8">─── Cargo Delivery (Bus-to-Bus) ───</text>
+<rect x="44" y="487" width="54" height="20" rx="3" fill="rgba(180,138,232,.12)"/>
+<line x1="58" y1="497" x2="214" y2="497" stroke="#B48AE8" stroke-width="1.5" marker-end="url(#ce)"/>
+<text x="136" y="492" text-anchor="middle" fill="#B48AE8">16. createBusDelivery(fromStn, toStn, cargo)</text>
+
+<line x1="240" y1="519" x2="410" y2="519" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="514" text-anchor="middle" fill="#FF6B9D">17. INSERT BusDelivery(status=PENDING, busTripId=null initially)</text>
+
+<line x1="58" y1="541" x2="214" y2="541" stroke="#B48AE8" stroke-width="1.5" marker-end="url(#ce)"/>
+<text x="136" y="536" text-anchor="middle" fill="#B48AE8">18. confirmLoad(deliveryId, tripId)</text>
+
+<line x1="240" y1="563" x2="410" y2="563" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="558" text-anchor="middle" fill="#FF6B9D">19. UPDATE BusDelivery: status=IN_TRANSIT, busTripId=tripId</text>
+
+<line x1="240" y1="585" x2="410" y2="585" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="580" text-anchor="middle" fill="#FF6B9D">20. INSERT BusDeliveryHandoff(fromStation, loadedBy)</text>
+
+<line x1="58" y1="607" x2="214" y2="607" stroke="#B48AE8" stroke-width="1.5" marker-end="url(#ce)"/>
+<text x="136" y="602" text-anchor="middle" fill="#B48AE8">21. confirmDelivery(deliveryId) — destination station</text>
+
+<line x1="240" y1="629" x2="410" y2="629" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="624" text-anchor="middle" fill="#FF6B9D">22. UPDATE BusDelivery.status=DELIVERED</text>
+
+<line x1="240" y1="651" x2="410" y2="651" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#sd)"/>
+<text x="325" y="646" text-anchor="middle" fill="#FF6B9D">23. INSERT BusDeliveryHandoff(toStation, deliveredBy)</text>
+</g>
+</svg>
+
 </div>
 </div>
-
 <script>
+// ── Panel switching ──────────────────────────────────────────
 function switchPanel(id, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
   btn.classList.add('active');
 }
+
+// ── Sequence sub-tab switching ───────────────────────────────
 function showSeq(id, btn) {
   document.querySelectorAll('.seq-flow').forEach(f => f.classList.remove('active'));
   document.querySelectorAll('.seq-tab').forEach(b => b.classList.remove('active'));
   document.getElementById('seq-' + id).classList.add('active');
   btn.classList.add('active');
 }
-// tooltip
-const tt = document.getElementById('tooltip'), ttTitle = document.getElementById('tt-title'), ttBody = document.getElementById('tt-body');
+
+// ── Tooltip ──────────────────────────────────────────────────
+const tt = document.getElementById('tooltip');
+const ttTitle = document.getElementById('tt-title');
+const ttBody = document.getElementById('tt-body');
+
 document.querySelectorAll('.dnode').forEach(el => {
   el.addEventListener('mouseenter', e => {
     const t = el.dataset.t || el.dataset.title || '';
     const d = el.dataset.d || el.dataset.desc || '';
     if (!t && !d) return;
-    ttTitle.textContent = t; ttBody.textContent = d; tt.classList.add('show');
+    ttTitle.textContent = t;
+    ttBody.textContent = d;
+    tt.classList.add('show');
   });
   el.addEventListener('mousemove', e => {
     let x = e.clientX + 16, y = e.clientY + 14;
     if (x + 280 > window.innerWidth) x = e.clientX - 280;
     if (y + 120 > window.innerHeight) y = e.clientY - 100;
-    tt.style.left = x + 'px'; tt.style.top = y + 'px';
+    tt.style.left = x + 'px';
+    tt.style.top  = y + 'px';
+  });
+  el.addEventListener('mouseleave', () => tt.classList.remove('show'));
+});
+
+// Also allow SVG g elements with data-title / data-desc (DFD nodes)
+document.querySelectorAll('g[data-t], g[data-title]').forEach(el => {
+  if (el.classList.contains('dnode')) return; // already handled
+  el.style.cursor = 'pointer';
+  el.addEventListener('mouseenter', e => {
+    const t = el.dataset.t || el.dataset.title || '';
+    const d = el.dataset.d || el.dataset.desc || '';
+    if (!t && !d) return;
+    ttTitle.textContent = t;
+    ttBody.textContent = d;
+    tt.classList.add('show');
+  });
+  el.addEventListener('mousemove', e => {
+    let x = e.clientX + 16, y = e.clientY + 14;
+    if (x + 280 > window.innerWidth) x = e.clientX - 280;
+    if (y + 120 > window.innerHeight) y = e.clientY - 100;
+    tt.style.left = x + 'px';
+    tt.style.top  = y + 'px';
   });
   el.addEventListener('mouseleave', () => tt.classList.remove('show'));
 });
